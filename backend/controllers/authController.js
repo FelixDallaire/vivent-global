@@ -1,9 +1,9 @@
 // controllers/authController.js
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Assurez-vous que le chemin est correct
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User"); // Assurez-vous que le chemin est correct
 
 /**
  * Auth Controller
@@ -19,7 +19,7 @@ function generateToken(user) {
   return jwt.sign(
     { userId: user._id, username: user.username, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '1d' }
+    { expiresIn: "1d" }
   );
 }
 
@@ -32,7 +32,7 @@ function formatUserResponse(user) {
   return {
     id: user._id,
     username: user.username,
-    role: user.role
+    role: user.role,
   };
 }
 
@@ -58,13 +58,13 @@ authController.login = async (req, res) => {
     // Vérifier si l'utilisateur existe
     const user = await User.findOne({ username });
     if (!user) {
-      return handleAuthError(res, 401, 'Invalid credentials');
+      return handleAuthError(res, 401, "Invalid credentials");
     }
 
     // Vérifier le mot de passe
     const validPassword = await bcrypt.compare(password, user.passwordHash);
     if (!validPassword) {
-      return handleAuthError(res, 401, 'Invalid credentials');
+      return handleAuthError(res, 401, "Invalid credentials");
     }
 
     // Générer le token JWT
@@ -76,11 +76,11 @@ authController.login = async (req, res) => {
     // Retourner le token et les informations utilisateur
     res.json({
       token,
-      user: formattedUser
+      user: formattedUser,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -91,23 +91,27 @@ authController.login = async (req, res) => {
  */
 authController.register = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
 
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return handleAuthError(res, 400, 'Username already taken');
+      return handleAuthError(res, 400, "Username already taken");
     }
 
     // Hasher le mot de passe
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
+    // Déterminer le rôle
+    const validRoles = ["participant", "organizer"];
+    const userRole = validRoles.includes(role) ? role : "participant";
+
     // Créer un nouvel utilisateur
     const newUser = new User({
       username,
       passwordHash,
-      role: 'organizer' // ou 'admin' selon votre logique
+      role: userRole,
     });
 
     await newUser.save();
@@ -121,11 +125,35 @@ authController.register = async (req, res) => {
     // Retourner le token et les informations utilisateur
     res.status(201).json({
       token,
-      user: formattedUser
+      user: formattedUser,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * Déconnecte l'utilisateur.
+ * @param {Object} req - Requête Express.
+ * @param {Object} res - Réponse Express.
+ */
+authController.logout = async (req, res) => {
+  try {
+    // Dans une authentification basée sur JWT, le logout est généralement géré côté client
+    // en supprimant le token. Si vous souhaitez implémenter une invalidation de token
+    // côté serveur (par exemple, en utilisant une liste noire), vous pouvez le faire ici.
+
+    // Exemple simple : répondre avec un message de succès
+    res.json({ message: "Déconnexion réussie" });
+
+    // Exemple avancé : Ajouter le token à une liste noire (implémentation non incluse)
+    // const token = req.headers.authorization.split(' ')[1];
+    // await blacklistToken(token);
+    // res.json({ message: 'Déconnexion réussie' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur du serveur" });
   }
 };
 

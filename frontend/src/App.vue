@@ -1,6 +1,8 @@
+<!-- src/App.vue -->
+
 <template>
   <div>
-    <Navbar />
+    <NavBar />
     <div class="container mt-4">
       <router-view />
     </div>
@@ -8,9 +10,14 @@
 </template>
 
 <script setup>
-import Navbar from './components/Navbar.vue';
+import NavBar from './components/NavBar.vue';
 </script>
 
 <style>
-/* Vous pouvez ajouter des styles globaux ici */
+/* Styles globaux peuvent être ajoutés ici */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 </style>

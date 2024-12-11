@@ -15,9 +15,9 @@ const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
 const markerRoutes = require('./routes/markers');
 
-app.use('/auth', authRoutes);
-app.use('/events', eventRoutes);
-app.use(markerRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api', markerRoutes);
 
 app.get('/', (req, res) => res.json({ message: 'Server running!' }));
 

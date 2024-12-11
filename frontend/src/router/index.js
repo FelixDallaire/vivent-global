@@ -7,6 +7,7 @@ import RegisterView from '../views/RegisterView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import EventDetailView from '../views/EventDetailView.vue';
 import AddFestivalView from '../views/AddFestivalView.vue';
+import { useAuthStore } from '../stores/auth';
 import { useUserStore } from '../stores/user';
 
 const routes = [
@@ -41,7 +42,7 @@ const routes = [
     path: '/add-festival',
     name: 'AddFestival',
     component: AddFestivalView,
-    meta: { requiresAuth: true, requiresRole: 'organisateur' },
+    meta: { requiresAuth: true, requiresRole: 'organizer' }, // Correspond à votre modèle backend où le rôle par défaut est 'organizer'
   },
   // Ajoutez d'autres routes ici si nécessaire
 ];
@@ -53,14 +54,16 @@ const router = createRouter({
 
 // Garde de navigation globale pour protéger les routes nécessitant une authentification et un rôle spécifique
 router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
   const userStore = useUserStore();
-  const isAuthenticated = userStore.isAuthenticated;
-  const userRoles = userStore.user?.roles || [];
+  const isAuthenticated = authStore.isAuthenticated;
+  const userRole = userStore.role;
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login');
-  } else if (to.meta.requiresRole && !userRoles.includes(to.meta.requiresRole)) {
-    next('/dashboard'); // Redirige vers le dashboard si l'utilisateur n'a pas le rôle requis
+  } else if (to.meta.requiresRole && to.meta.requiresRole !== userRole) {
+    // Rediriger vers le dashboard ou une page d'erreur si le rôle ne correspond pas
+    next('/dashboard');
   } else {
     next();
   }

@@ -1,15 +1,25 @@
-<!-- <template>
+<template>
   <nav class="navbar navbar-expand-lg bg-light shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand d-flex align-items-center" href="/">
-        <img src="../assets/logo.svg" alt="Logo" class="me-2" width="auto" height="25" />
-      </a>
-
-      <div class="collapse navbar-collapse justify-content-center">
+      <router-link class="navbar-brand d-flex align-items-center" to="/">
+        <img src="@/assets/logo.svg" alt="Logo" class="me-2" height="25" />
+      </router-link>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav mb-2 mb-lg-0">
+          <!-- Add additional navigation links if needed -->
         </ul>
       </div>
-
       <div class="d-flex align-items-center">
         <template v-if="isAuthenticated">
           <span class="me-2 nav-username fw-medium">{{ username }}</span>
@@ -17,31 +27,35 @@
             <button class="btn btn-link p-0 border-0 dropdown-toggle-no-arrow" type="button" id="avatarDropdown"
               data-bs-toggle="dropdown" aria-expanded="false">
               <div class="avatar-border">
-                <img :src="userAvatar" alt="User Avatar" class="rounded-circle avatar img-thumbnail nav-avatar" />
+                <img :src="userAvatar || defaultAvatar" alt="User Avatar" class="rounded-circle avatar img-thumbnail nav-avatar" />
               </div>
             </button>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="avatarDropdown">
-              <li>
-                <router-link class="dropdown-item" to="/profile">Profil</router-link>
-              </li>
-              <li v-if="is_admin">
-                <router-link class="dropdown-item" to="/tags">Tags</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/add">Ajouter Item</router-link>
+              <li v-if="isOrganizer">
+                <router-link class="dropdown-item" to="/add-festival">
+                  <i class="bi bi-plus-circle"></i> Add Festival
+                </router-link>
               </li>
               <li>
-                <hr class="dropdown-divider" />
+                <router-link class="dropdown-item" to="/profile">
+                  <i class="bi bi-person-circle"></i> Profile
+                </router-link>
               </li>
               <li>
-                <button @click="logout" class="dropdown-item text-danger">Déconnexion</button>
+                <button @click="logout" class="dropdown-item text-danger">
+                  <i class="bi bi-box-arrow-right"></i> Log out
+                </button>
               </li>
             </ul>
           </div>
         </template>
         <template v-else>
-          <router-link class="btn btn-primary me-2" to="/login">Connexion</router-link>
-          <router-link class="btn btn-outline-primary" to="/signup">Inscription</router-link>
+          <router-link class="btn btn-primary me-2" to="/login">
+            <i class="bi bi-box-arrow-in-right"></i> Log in
+          </router-link>
+          <router-link class="btn btn-outline-primary" to="/register">
+            <i class="bi bi-person-plus"></i> Register
+          </router-link>
         </template>
       </div>
     </div>
@@ -49,57 +63,36 @@
 </template>
 
 <script>
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import defaultAvatar from '@/assets/default-avatar.png'; // Ensure this path is correct
 
 export default {
   name: 'NavBar',
   setup() {
     const authStore = useAuthStore();
+    const userStore = useUserStore();
     const router = useRouter();
 
-    /**
-     * Indique si l'utilisateur est authentifié.
-     * 
-     * @returns {Boolean} True si l'utilisateur est connecté, sinon False.
-     */
     const isAuthenticated = computed(() => authStore.isAuthenticated);
+    const isOrganizer = computed(() => userStore.isOrganizer);
+    const userAvatar = computed(() => userStore.avatar);
+    const username = computed(() => userStore.username);
 
-    /**
-     * Indique si l'utilisateur actuel est administrateur.
-     * 
-     * @returns {Boolean} True si l'utilisateur est admin, sinon False.
-     */
-    const is_admin = computed(() => authStore.is_admin);
-
-    /**
-     * Récupère l'avatar de l'utilisateur connecté.
-     * 
-     * @returns {String} URL de l'avatar de l'utilisateur.
-     */
-    const userAvatar = computed(() => authStore.user?.avatar);
-
-    /**
-     * Récupère le nom d'utilisateur de l'utilisateur connecté.
-     * 
-     * @returns {String} Nom d'utilisateur.
-     */
-    const username = computed(() => authStore.user?.username);
-
-    /**
-     * Déconnecte l'utilisateur et le redirige vers la page de connexion.
-     */
-    const logout = () => {
-      authStore.logoutUser(router);
+    const logout = async () => {
+      await authStore.logout();
+      router.push('/login');
     };
 
     return {
       isAuthenticated,
-      is_admin,
+      isOrganizer,
       userAvatar,
-      logout,
       username,
+      logout,
+      defaultAvatar,
     };
   },
 };
@@ -108,18 +101,20 @@ export default {
 <style scoped>
 .navbar {
   padding: 1rem;
-  background-color: var(--primary-dark-blue) !important;
 }
 
 .dropdown-toggle-no-arrow::after {
   display: none !important;
 }
-</style> -->
 
-<template>
-  <p>Navbar component</p>
-</template>
+.avatar-border {
+  width: 40px;
+  height: 40px;
+}
 
-<script></script>
-
-<style></style>
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>
