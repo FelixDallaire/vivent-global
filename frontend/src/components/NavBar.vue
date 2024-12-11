@@ -26,8 +26,8 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="avatarDropdown">
               <li v-if="isOrganizer">
-                <router-link class="dropdown-item" to="/add-festival">
-                  <i class="bi bi-plus-circle"></i> Add Festival
+                <router-link class="dropdown-item" to="/add-event">
+                  <i class="bi bi-plus-circle"></i> Add event
                 </router-link>
               </li>
               <li>

@@ -1,14 +1,15 @@
-// src/router/index.js
-
 import { createRouter, createWebHistory } from 'vue-router';
-import LandingPageView from '../views/LandingPageView.vue';
-import LoginView from '../views/LoginView.vue';
-import RegisterView from '../views/RegisterView.vue';
-import DashboardView from '../views/DashboardView.vue';
-import EventDetailView from '../views/EventDetailView.vue';
-import AddEventView from '../views/AddEventView.vue';
-import { useAuthStore } from '../stores/auth';
-import { useUserStore } from '../stores/user';
+import LandingPageView from '@/views/LandingPageView.vue';
+import LoginView from '@/views/LoginView.vue';
+import RegisterView from '@/views/RegisterView.vue';
+import DashboardView from '@/views/DashboardView.vue';
+import EventDetailView from '@/views/EventDetailView.vue';
+import AddEventView from '@/views/AddEventView.vue';
+import MapSelectionView from '@/views/MapSelectionView.vue';
+import MapEditingView from '@/views/MapEditingView.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useUserStore } from '@/stores/user';
+import { useEventStore } from '@/stores/event';
 
 const routes = [
   {
@@ -39,12 +40,29 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/add-festival',
-    name: 'AddFestival',
+    path: '/add-event',
+    name: 'AddEvent',
     component: AddEventView,
-    meta: { requiresAuth: true, requiresRole: 'organizer' }, // Correspond à votre modèle backend où le rôle par défaut est 'organizer'
+    meta: { requiresAuth: true, requiresRole: 'organizer' },
   },
-  // Ajoutez d'autres routes ici si nécessaire
+  {
+    path: '/edit-event/:id',
+    name: 'EditEvent',
+    component: AddEventView,
+    meta: { requiresAuth: true, requiresRole: 'organizer' },
+  },
+  {
+    path: '/map-selection',
+    name: 'MapSelection',
+    component: MapSelectionView,
+    meta: { requiresAuth: true, requiresRole: 'organizer' }
+  },
+  {
+    path: '/map-editing',
+    name: 'MapEditing',
+    component: MapEditingView,
+    meta: { requiresAuth: true, requiresRole: 'organizer' }
+  }
 ];
 
 const router = createRouter({
@@ -52,18 +70,17 @@ const router = createRouter({
   routes,
 });
 
-// Garde de navigation globale pour protéger les routes nécessitant une authentification et un rôle spécifique
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const userStore = useUserStore();
-  const isAuthenticated = authStore.isAuthenticated;
-  const userRole = userStore.role;
+  const eventStore = useEventStore();
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login');
-  } else if (to.meta.requiresRole && to.meta.requiresRole !== userRole) {
-    // Rediriger vers le dashboard ou une page d'erreur si le rôle ne correspond pas
+  } else if (to.meta.requiresRole && to.meta.requiresRole !== userStore.role) {
     next('/dashboard');
+  } else if (to.name === 'MapEditing' && !eventStore.selectedMap) {
+    next({ name: 'MapSelection' });
   } else {
     next();
   }

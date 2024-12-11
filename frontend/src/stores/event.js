@@ -1,17 +1,15 @@
-// src/store/event.js
-
 import { defineStore } from 'pinia';
-import EventService from '../services/EventService';
+import { listEvents, getEventById, createEvent, updateEvent } from '@/services/EventService';
 
 export const useEventStore = defineStore('event', {
   state: () => ({
-    events: []
+    events: [], // Events will be persisted
   }),
   actions: {
     async fetchEvents() {
       try {
-        const response = await EventService.listEvents();
-        this.events = response.data;
+        const events = await listEvents();
+        this.events = events; // Update the state with the fetched events
       } catch (error) {
         console.error('Failed to fetch events:', error);
       }
@@ -19,9 +17,8 @@ export const useEventStore = defineStore('event', {
 
     async fetchEventById(id) {
       try {
-        const response = await EventService.getEventById(id);
-        // You might want to do something with this single event or add to a different state
-        return response.data;
+        const event = await getEventById(id);
+        return event;
       } catch (error) {
         console.error('Failed to fetch event:', error);
       }
@@ -29,8 +26,8 @@ export const useEventStore = defineStore('event', {
 
     async addEvent(eventData) {
       try {
-        const response = await EventService.createEvent(eventData);
-        this.events.push(response.data);
+        const newEvent = await createEvent(eventData);
+        this.events.push(newEvent); // Add the new event to the state
       } catch (error) {
         console.error('Failed to add event:', error);
       }
@@ -38,14 +35,19 @@ export const useEventStore = defineStore('event', {
 
     async updateEvent(id, eventData) {
       try {
-        const response = await EventService.updateEvent(id, eventData);
+        const updatedEvent = await updateEvent(id, eventData);
         const index = this.events.findIndex(event => event._id === id);
         if (index !== -1) {
-          this.events[index] = {...this.events[index], ...response.data};
+          this.events[index] = { ...this.events[index], ...updatedEvent }; // Update the event in the state
         }
       } catch (error) {
         console.error('Failed to update event:', error);
       }
-    }
-  }
+    },
+  },
+  persist: {
+    key: 'event-store', // Unique key to store the events in localStorage
+    storage: window.localStorage, // Persist data in localStorage
+    paths: ['events'], // Persist only the `events` state
+  },
 });

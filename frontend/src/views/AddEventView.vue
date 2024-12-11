@@ -1,57 +1,63 @@
 <template>
-    <div>
-      <h1>{{ event ? 'Update Event' : 'Add New Event' }}</h1>
-      <EventForm :event="event" @submit="handleFormSubmit" />
-    </div>
-  </template>
-  
-  <script>
-  import EventForm from '../components/EventForm.vue';
-  
-  export default {
-    components: {
-      EventForm
-    },
-    props: {
-      eventId: String
-    },
-    data() {
-      return {
-        event: null // This would be fetched based on the eventId prop
-      };
-    },
-    created() {
-      if (this.eventId) {
-        // Assume fetchEvent is a method to fetch event details from an API
-        this.fetchEvent(this.eventId).then(data => {
-          this.event = data;
-        });
+  <div class="container mt-5">
+    <h1>{{ eventId ? 'Edit Event' : 'Add New Event' }}</h1>
+    <EventForm :initialData="event" @form-submit="handleFormSubmit" />
+  </div>
+</template>
+
+<script>
+import EventForm from '@/components/EventForm.vue';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useEventStore } from '@/stores/event';
+
+export default {
+  components: {
+    EventForm
+  },
+  setup() {
+    const eventStore = useEventStore();
+    const route = useRoute();
+    const router = useRouter();
+    const eventId = ref(route.params.id);
+    const event = ref({
+      _id: null,
+      name: '',
+      description: '',
+      startDate: new Date().toISOString().substr(0, 10),
+      endDate: new Date().toISOString().substr(0, 10),
+    });
+
+    onMounted(async () => {
+      if (eventId.value) {
+        const fetchedEvent = await eventStore.fetchEventById(eventId.value);
+        event.value = fetchedEvent || event.value;
       }
-    },
-    methods: {
-      handleFormSubmit(formData) {
-        if (this.event) {
-          // Update logic
-          console.log('Updating event:', formData);
+    });
+
+    const handleFormSubmit = async (formData) => {
+      try {
+        if (eventId.value) {
+          await eventStore.updateEvent(eventId.value, formData);
         } else {
-          // Create logic
-          console.log('Creating new event:', formData);
+          await eventStore.addEvent(formData);
         }
-      },
-      async fetchEvent(id) {
-        // Placeholder for fetching event data
-        // Return mock data or actual API call
-        return {
-          _id: id,
-          name: 'Sample Event',
-          description: 'This is a sample event.'
-        };
+        router.push('/dashboard');
+      } catch (error) {
+        console.error('Error submitting event:', error);
+        alert(error.response?.data?.message || 'An error occurred while submitting the event.');
       }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  /* Style your view here */
-  </style>
-  
+    };
+
+
+    return { eventId, event, handleFormSubmit };
+  }
+};
+</script>
+
+<style scoped>
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+</style>

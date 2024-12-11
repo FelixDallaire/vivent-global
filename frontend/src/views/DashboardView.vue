@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <h1>Welcome, {{ username }}!</h1>
-    <p v-if="isOrganizer">You have the ability to manage and create festivals.</p>
+    <p v-if="isOrganizer">You have the ability to manage and create Events.</p>
     <p v-else>You can explore events and engage with them.</p>
     <!-- Event List Component included here -->
     <EventList />
