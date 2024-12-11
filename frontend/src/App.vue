@@ -1,18 +1,25 @@
-<!-- src/App.vue -->
-
 <template>
   <div>
-    <NavBar />
-    <div class="container mt-4">
-      <router-view />
-    </div>
+    <Navbar v-if="!hideNavbar" /> <!-- Conditionally render the navbar -->
+    <router-view />
   </div>
 </template>
 
-<script setup>
-import NavBar from './components/NavBar.vue';
-</script>
+<script>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import Navbar from '@/components/Navbar.vue';
 
-<style>
-/* Styles globaux peuvent être ajoutés ici */
-</style>
+export default {
+  components: {
+    Navbar,
+  },
+  setup() {
+    const route = useRoute();
+    const hideNavbar = computed(() => route.name === 'MapEditing');
+    return {
+      hideNavbar,
+    };
+  },
+};
+</script>

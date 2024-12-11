@@ -27,7 +27,7 @@
             <h4>Preview Map</h4>
           </div>
           <div class="card-body text-center">
-            <img :src="selectedMapImage" alt="Map Preview" class="img-fluid" />
+            <img :src="selectedMapImageUrl" alt="Map Preview" class="img-fluid" />
           </div>
         </div>
       </div>
@@ -36,12 +36,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'; // Correct import for ref
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useEventStore } from '@/stores/event';
-import map1 from '@/assets/maps/map1.svg';
-import map2 from '@/assets/maps/map2.svg';
-import map3 from '@/assets/maps/map3.svg';
 
 export default {
   props: {
@@ -51,14 +48,17 @@ export default {
     const router = useRouter();
     const eventStore = useEventStore();
     const maps = ref([
-      { id: 1, name: 'Map 1', imageUrl: map1 },
-      { id: 2, name: 'Map 2', imageUrl: map2 },
-      { id: 3, name: 'Map 3', imageUrl: map3 },
+      { id: 1, name: 'Map 1', fileName: 'map1.svg' },
+      { id: 2, name: 'Map 2', fileName: 'map2.svg' },
+      { id: 3, name: 'Map 3', fileName: 'map3.svg' },
     ]);
-    const selectedMapImage = ref(maps.value[0].imageUrl); // Default to first map's image
+
+    const selectedMapImage = ref(maps.value[0].fileName); // Default to the first map's filename
+    const selectedMapImageUrl = ref(`https://felixdallaire.github.io/svg-hosting/maps/${selectedMapImage.value}`); // Construct full URL for the image
 
     const selectMap = (map) => {
-      selectedMapImage.value = map.imageUrl;
+      selectedMapImage.value = map.fileName;
+      selectedMapImageUrl.value = `https://felixdallaire.github.io/svg-hosting/maps/${map.fileName}`;
     };
 
     const confirmMapSelection = async () => {
@@ -74,10 +74,11 @@ export default {
     return {
       maps,
       selectedMapImage,
+      selectedMapImageUrl,
       selectMap,
       confirmMapSelection,
     };
-  }
+  },
 };
 </script>
 
