@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const markerController = require('../controllers/markerController');
-const auth = require('../middleware/auth');
+const auth = require('../middlewares/auth');
 
 // Require valid JWT for all marker routes
 router.use(auth);

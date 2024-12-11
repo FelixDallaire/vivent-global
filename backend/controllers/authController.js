@@ -1,55 +1,132 @@
-const User = require('../models/User');
+// controllers/authController.js
+
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User'); // Assurez-vous que le chemin est correct
 
-module.exports = {
-  register: async (req, res) => {
-    try {
-      const { username, password } = req.body;
-      if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required' });
-      }
+/**
+ * Auth Controller
+ */
+const authController = {};
 
-      const existingUser = await User.findOne({ username });
-      if (existingUser) {
-        return res.status(400).json({ message: 'Username already taken' });
-      }
+/**
+ * Génère un token JWT pour un utilisateur donné.
+ * @param {Object} user - Utilisateur Mongoose.
+ * @returns {String} Token JWT.
+ */
+function generateToken(user) {
+  return jwt.sign(
+    { userId: user._id, username: user.username, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
+}
 
-      const passwordHash = await bcrypt.hash(password, 10);
-      const newUser = new User({ username, passwordHash });
-      await newUser.save();
+/**
+ * Formate les données de l'utilisateur pour la réponse.
+ * @param {Object} user - Utilisateur Mongoose.
+ * @returns {Object} Données formatées de l'utilisateur.
+ */
+function formatUserResponse(user) {
+  return {
+    id: user._id,
+    username: user.username,
+    role: user.role
+  };
+}
 
-      res.status(201).json({ message: 'User created successfully' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Server error' });
+/**
+ * Gère les erreurs d'authentification.
+ * @param {Object} res - Réponse Express.
+ * @param {Number} statusCode - Code de statut HTTP.
+ * @param {String} message - Message d'erreur.
+ */
+function handleAuthError(res, statusCode, message) {
+  return res.status(statusCode).json({ message });
+}
+
+/**
+ * Connecte un utilisateur existant.
+ * @param {Object} req - Requête Express.
+ * @param {Object} res - Réponse Express.
+ */
+authController.login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Vérifier si l'utilisateur existe
+    const user = await User.findOne({ username });
+    if (!user) {
+      return handleAuthError(res, 401, 'Invalid credentials');
     }
-  },
 
-  login: async (req, res) => {
-    try {
-      const { username, password } = req.body;
-
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      const validPassword = await bcrypt.compare(password, user.passwordHash);
-      if (!validPassword) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      const token = jwt.sign(
-        { userId: user._id, username: user.username, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' }
-      );
-
-      res.json({ token });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Server error' });
+    // Vérifier le mot de passe
+    const validPassword = await bcrypt.compare(password, user.passwordHash);
+    if (!validPassword) {
+      return handleAuthError(res, 401, 'Invalid credentials');
     }
+
+    // Générer le token JWT
+    const token = generateToken(user);
+
+    // Formater la réponse utilisateur
+    const formattedUser = formatUserResponse(user);
+
+    // Retourner le token et les informations utilisateur
+    res.json({
+      token,
+      user: formattedUser
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
+/**
+ * Inscrit un nouvel utilisateur.
+ * @param {Object} req - Requête Express.
+ * @param {Object} res - Réponse Express.
+ */
+authController.register = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return handleAuthError(res, 400, 'Username already taken');
+    }
+
+    // Hasher le mot de passe
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    // Créer un nouvel utilisateur
+    const newUser = new User({
+      username,
+      passwordHash,
+      role: 'organizer' // ou 'admin' selon votre logique
+    });
+
+    await newUser.save();
+
+    // Générer le token JWT
+    const token = generateToken(newUser);
+
+    // Formater la réponse utilisateur
+    const formattedUser = formatUserResponse(newUser);
+
+    // Retourner le token et les informations utilisateur
+    res.status(201).json({
+      token,
+      user: formattedUser
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = authController;

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/eventController');
-const auth = require('../middleware/auth');
+const auth = require('../middlewares/auth');
 
 // Require valid JWT for all event routes
 router.use(auth);
