@@ -6,7 +6,7 @@ import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import DashboardView from '../views/DashboardView.vue';
 import EventDetailView from '../views/EventDetailView.vue';
-import AddFestivalView from '../views/AddFestivalView.vue';
+import AddEventView from '../views/AddEventView.vue';
 import { useAuthStore } from '../stores/auth';
 import { useUserStore } from '../stores/user';
 
@@ -41,7 +41,7 @@ const routes = [
   {
     path: '/add-festival',
     name: 'AddFestival',
-    component: AddFestivalView,
+    component: AddEventView,
     meta: { requiresAuth: true, requiresRole: 'organizer' }, // Correspond à votre modèle backend où le rôle par défaut est 'organizer'
   },
   // Ajoutez d'autres routes ici si nécessaire

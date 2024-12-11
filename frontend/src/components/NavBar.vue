@@ -4,15 +4,8 @@
       <router-link class="navbar-brand d-flex align-items-center" to="/">
         <img src="@/assets/logo.svg" alt="Logo" class="me-2" height="25" />
       </router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -27,7 +20,8 @@
             <button class="btn btn-link p-0 border-0 dropdown-toggle-no-arrow" type="button" id="avatarDropdown"
               data-bs-toggle="dropdown" aria-expanded="false">
               <div class="avatar-border">
-                <img :src="userAvatar || defaultAvatar" alt="User Avatar" class="rounded-circle avatar img-thumbnail nav-avatar" />
+                <img :src="userAvatar || defaultAvatar" alt="User Avatar"
+                  class="rounded-circle avatar img-thumbnail nav-avatar" />
               </div>
             </button>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="avatarDropdown">
@@ -37,8 +31,9 @@
                 </router-link>
               </li>
               <li>
-                <router-link class="dropdown-item" to="/profile">
+                <router-link class="dropdown-item disabled" to="#">
                   <i class="bi bi-person-circle"></i> Profile
+                  <span class="badge badge-sm bg-warning text-dark">Soon!</span>
                 </router-link>
               </li>
               <li>
