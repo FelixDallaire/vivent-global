@@ -37,12 +37,10 @@ export default {
 
     const handleFormSubmit = async (formData) => {
       try {
-        if (eventId.value) {
-          await eventStore.updateEvent(eventId.value, formData);
-        } else {
-          await eventStore.addEvent(formData);
-        }
-        router.push('/dashboard');
+        const currentEvent = eventId.value
+          ? await eventStore.updateEvent(eventId.value, formData)
+          : await eventStore.addEvent(formData);
+        router.push({ name: 'MapSelection', params: { eventId: currentEvent._id } });
       } catch (error) {
         console.error('Error submitting event:', error);
         alert(error.response?.data?.message || 'An error occurred while submitting the event.');

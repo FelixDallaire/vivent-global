@@ -52,16 +52,18 @@ const routes = [
     meta: { requiresAuth: true, requiresRole: 'organizer' },
   },
   {
-    path: '/map-selection',
+    path: '/map-selection/:eventId',
     name: 'MapSelection',
     component: MapSelectionView,
-    meta: { requiresAuth: true, requiresRole: 'organizer' }
+    meta: { requiresAuth: true, requiresRole: 'organizer' },
+    props: true
   },
   {
-    path: '/map-editing',
+    path: '/map-editing/:eventId',
     name: 'MapEditing',
     component: MapEditingView,
-    meta: { requiresAuth: true, requiresRole: 'organizer' }
+    meta: { requiresAuth: true, requiresRole: 'organizer' },
+    props: true
   }
 ];
 
@@ -79,8 +81,8 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else if (to.meta.requiresRole && to.meta.requiresRole !== userStore.role) {
     next('/dashboard');
-  } else if (to.name === 'MapEditing' && !eventStore.selectedMap) {
-    next({ name: 'MapSelection' });
+  } else if (to.name === 'MapSelection' && !to.params.eventId) {
+    next('/dashboard');
   } else {
     next();
   }

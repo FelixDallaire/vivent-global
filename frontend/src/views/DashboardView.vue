@@ -10,7 +10,8 @@
 
 <script>
 import { useUserStore } from '@/stores/user';
-import { computed } from 'vue';
+import { useEventStore } from '@/stores/event'; // Import EventStore
+import { computed, onMounted } from 'vue';
 import EventList from '../components/EventList.vue';
 
 export default {
@@ -20,9 +21,15 @@ export default {
   },
   setup() {
     const userStore = useUserStore();
+    const eventStore = useEventStore(); // Use the EventStore
 
     const isOrganizer = computed(() => userStore.isOrganizer);
     const username = computed(() => userStore.username);
+
+    // Fetch events when component mounts
+    onMounted(() => {
+      eventStore.fetchEvents(); // Call fetchEvents from EventStore
+    });
 
     return {
       isOrganizer,

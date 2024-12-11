@@ -1,33 +1,22 @@
 // src/store/auth.js
-
 import { defineStore } from "pinia";
 import { loginUser, registerUser, logoutUser } from "../services/authService";
-import { useUserStore } from "./user"; // Importer le userStore
+import { useUserStore } from "./user"; // Import the User Store
+import { useEventStore } from "./event"; // Import the Event Store
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: localStorage.getItem("token") || null, // Token JWT de l'utilisateur
   }),
   getters: {
-    /**
-     * Indique si l'utilisateur est authentifié.
-     * @returns {Boolean} True si l'utilisateur est connecté, sinon False.
-     */
     isAuthenticated: (state) => !!state.token,
   },
   actions: {
-    /**
-     * Connecte l'utilisateur.
-     * @param {String} username
-     * @param {String} password
-     */
     async login(username, password) {
       try {
         const data = await loginUser(username, password);
         this.token = data.token;
         localStorage.setItem("token", this.token);
-
-        // Mettre à jour le User Store avec les données utilisateur
         const userStore = useUserStore();
         userStore.setUser(data.user);
       } catch (error) {
@@ -35,18 +24,11 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    /**
-     * Inscrit un nouvel utilisateur.
-     * @param {String} username
-     * @param {String} password
-     */
     async register(username, password) {
       try {
         const data = await registerUser(username, password);
         this.token = data.token;
         localStorage.setItem("token", this.token);
-
-        // Mettre à jour le User Store avec les données utilisateur
         const userStore = useUserStore();
         userStore.setUser(data.user);
       } catch (error) {
@@ -54,9 +36,6 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    /**
-     * Déconnecte l'utilisateur.
-     */
     async logout() {
       try {
         await logoutUser();
@@ -69,6 +48,10 @@ export const useAuthStore = defineStore("auth", {
         // Réinitialiser le User Store
         const userStore = useUserStore();
         userStore.resetUser();
+
+        // Also reset the Event Store
+        const eventStore = useEventStore();
+        eventStore.resetEvents(); // Method to be added in Event Store for resetting events
       }
     },
   },

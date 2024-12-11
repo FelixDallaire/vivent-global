@@ -19,7 +19,9 @@
           <div class="dropdown">
             <button class="btn btn-link p-0 border-0 dropdown-toggle-no-arrow" type="button" id="avatarDropdown"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="avatar" alt="User Avatar" class="rounded-circle p-0 border border-success border-3 avatar img-thumbnail nav-avatar" width="50" />
+              <img :src="avatar" alt="User Avatar"
+                class="rounded-circle p-0 border border-success border-3 avatar img-thumbnail nav-avatar" width="50"
+                height="50" />
             </button>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="avatarDropdown">
               <li v-if="isOrganizer">
