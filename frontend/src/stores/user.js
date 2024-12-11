@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
     id: localStorage.getItem('userId') || null, // ID de l'utilisateur
     username: localStorage.getItem('username') || '', // Nom d'utilisateur
     role: localStorage.getItem('role') || 'organizer', // Rôle de l'utilisateur
+    avatar: localStorage.getItem('avatar') || null
   }),
   getters: {
     /**
@@ -24,11 +25,13 @@ export const useUserStore = defineStore('user', {
       this.id = userData.id;
       this.username = userData.username;
       this.role = userData.role || 'organizer';
+      this.avatar = userData.avatar;
 
       // Stocker les informations dans le localStorage pour la persistance
       localStorage.setItem('userId', this.id);
       localStorage.setItem('username', this.username);
       localStorage.setItem('role', this.role);
+      localStorage.removeItem('avatar')
     },
 
     /**
@@ -38,16 +41,18 @@ export const useUserStore = defineStore('user', {
       this.id = null;
       this.username = '';
       this.role = 'organizer';
+      this.avatar = ''
 
       // Supprimer les informations du localStorage
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
       localStorage.removeItem('role');
+      localStorage.removeItem('avatar')
     },
   },
   persist: {
     key: 'user',
     storage: localStorage,
-    paths: ['id', 'username', 'role'],
+    paths: ['id', 'username', 'role', 'avatar'],
   },
 });

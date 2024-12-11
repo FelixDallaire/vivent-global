@@ -8,7 +8,7 @@ router.post('/register', authController.register);
 // POST /auth/login - Login and receive a JWT token
 router.post('/login', authController.login);
 
-// POST /auth/logout - logout and send success response
-router.post('/login', authController.login);
+// POST /auth/logout - Logout and send success response
+router.post('/logout', authController.logout);
 
 module.exports = router;
