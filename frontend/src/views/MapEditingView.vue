@@ -1,32 +1,25 @@
 <template>
-  <div class="map-canvas-container">
-    <MapCanvas :mapType="event.mapType" ref="mapCanvas" />
-    <MapControls
-      @zoom-in="handleZoomIn"
-      @zoom-out="handleZoomOut"
-      @center-map="handleCenter"
-    />
+  <div class="map-canvas-container" v-if="event.mapType">
+    <MapCanvas :mapType="event.mapType" :eventId="eventId" ref="mapCanvas" />
   </div>
 </template>
+
 
 <script>
 import { ref, onMounted } from 'vue';
 import { useEventStore } from '@/stores/event';
 import MapCanvas from '@/components/MapEditor/MapCanvas.vue';
-import MapControls from '@/components/MapEditor/MapControls.vue';
 
 export default {
   components: {
     MapCanvas,
-    MapControls,
   },
   props: {
-    eventId: String,
+    eventId: String, // Parent component receives eventId
   },
   setup(props) {
     const eventStore = useEventStore();
     const event = ref({ mapType: null });
-    const mapCanvas = ref(null);
 
     onMounted(async () => {
       if (props.eventId) {
@@ -35,23 +28,8 @@ export default {
       }
     });
 
-    const handleZoomIn = () => {
-      mapCanvas.value.zoomIn();
-    };
-
-    const handleZoomOut = () => {
-      mapCanvas.value.zoomOut();
-    };
-
-    const handleCenter = () => {
-      mapCanvas.value.centerMap();
-    };
-
     return {
       event,
-      handleZoomIn,
-      handleZoomOut,
-      handleCenter,
     };
   },
 };

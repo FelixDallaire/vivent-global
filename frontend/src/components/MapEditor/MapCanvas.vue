@@ -1,136 +1,130 @@
 <template>
-    <div class="map-canvas" ref="mapContainer"></div>
-  </template>
-  
-  <script>
-  import { SVG } from '@svgdotjs/svg.js';
-  
-  export default {
-    props: {
-      mapType: String,
-    },
-    data() {
-      return {
-        svgElement: null,
-        panX: 0,
-        panY: 0,
-        scale: 1,
-        initialViewbox: null,
-        isDragging: false,
-        dragStart: { x: 0, y: 0 },
-      };
-    },
-    watch: {
-      mapType: {
-        immediate: true,
-        handler(newVal) {
-          this.loadMap(newVal);
-        },
+  <div class="map-canvas">
+    <!-- Display the SVG map -->
+    <img v-if="mapUrl" :src="mapUrl" alt="Map" class="map-image" />
+
+    <!-- Render clickable markers -->
+    <svg v-if="placeholders.length" xmlns="http://www.w3.org/2000/svg" class="marker-layer">
+      <image
+        v-for="placeholder in placeholders"
+        :key="placeholder.id"
+        :href="getMarkerImageUrl()"
+        :x="placeholder.x - 15"
+        :y="placeholder.y - 15"
+        width="30"
+        height="30"
+        @click="onMarkerClick(placeholder)"
+        class="marker-icon"
+      />
+      <text
+        v-for="placeholder in placeholders"
+        :key="`${placeholder.id}-label`"
+        :x="placeholder.x + 20"
+        :y="placeholder.y"
+        font-size="12"
+        fill="black"
+      >
+        {{ placeholder.label }}
+      </text>
+    </svg>
+
+    <!-- Marker Settings Modal -->
+    <MarkerSettingsModal
+      v-if="isModalVisible"
+      :visible="isModalVisible"
+      :marker="selectedMarker"
+      @cancel="closeModal"
+    />
+  </div>
+</template>
+
+<script>
+import { markerPlaceholders } from '@/configs/markerPlaceholders';
+import MarkerSettingsModal from '@/components/Mapeditor/MarkerSettingsModal.vue';
+
+export default {
+  components: {
+    MarkerSettingsModal,
+  },
+  props: {
+    mapType: String,
+    eventId: String,
+  },
+  data() {
+    return {
+      mapUrl: null, // URL of the SVG map
+      placeholders: [], // Marker placeholders for the current map
+      isModalVisible: false, // Controls modal visibility
+      selectedMarker: null, // Currently selected marker
+    };
+  },
+  watch: {
+    mapType: {
+      immediate: true,
+      handler(newVal) {
+        this.loadMap(newVal);
+        this.loadPlaceholders(newVal);
       },
     },
-    methods: {
-      loadMap(mapType) {
-        if (mapType) {
-          this.$refs.mapContainer.innerHTML = '';
-  
-          const mapUrl = `https://felixdallaire.github.io/svg-hosting/maps/${mapType}`;
-          const draw = SVG().addTo(this.$refs.mapContainer).size('100%', '100%');
-          this.svgElement = draw;
-  
-          fetch(mapUrl)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(`Failed to load map: ${response.statusText}`);
-              }
-              return response.text();
-            })
-            .then((svgContent) => {
-              const svg = draw.svg(svgContent);
-              const bbox = svg.bbox();
-  
-              this.initialViewbox = { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height };
-              this.resetViewbox();
-  
-              this.setupDragging();
-            })
-            .catch((error) => {
-              console.error('Error loading the SVG map:', error);
-            });
-        }
-      },
-      setupDragging() {
-        const container = this.$refs.mapContainer;
-  
-        container.addEventListener('mousedown', (e) => {
-          this.isDragging = true;
-          this.dragStart = { x: e.clientX, y: e.clientY };
-        });
-  
-        container.addEventListener('mousemove', (e) => {
-          if (!this.isDragging) return;
-  
-          const dx = (this.dragStart.x - e.clientX) / this.scale;
-          const dy = (this.dragStart.y - e.clientY) / this.scale;
-  
-          this.panX += dx;
-          this.panY += dy;
-  
-          this.dragStart = { x: e.clientX, y: e.clientY };
-          this.updateViewbox();
-        });
-  
-        container.addEventListener('mouseup', () => {
-          this.isDragging = false;
-        });
-  
-        container.addEventListener('mouseleave', () => {
-          this.isDragging = false;
-        });
-      },
-      updateViewbox() {
-        if (this.svgElement) {
-          this.svgElement.viewbox(
-            this.panX,
-            this.panY,
-            this.initialViewbox.width / this.scale,
-            this.initialViewbox.height / this.scale
-          );
-        }
-      },
-      resetViewbox() {
-        if (this.initialViewbox) {
-          this.panX = this.initialViewbox.x;
-          this.panY = this.initialViewbox.y;
-          this.scale = 1;
-          this.updateViewbox();
-        }
-      },
-      zoomIn() {
-        this.scale = Math.min(this.scale + 0.2, 3);
-        this.updateViewbox();
-      },
-      zoomOut() {
-        this.scale = Math.max(this.scale - 0.2, 0.5);
-        this.updateViewbox();
-      },
-      centerMap() {
-        this.resetViewbox();
-      },
+  },
+  methods: {
+    loadMap(mapType) {
+      if (mapType) {
+        // Construct the URL for the SVG map
+        this.mapUrl = `https://felixdallaire.github.io/svg-hosting/maps/${mapType}`;
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  .map-canvas {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-    cursor: grab;
-  }
-  
-  .map-canvas:active {
-    cursor: grabbing;
-  }
-  </style>
-  
+    loadPlaceholders(mapType) {
+      if (markerPlaceholders[mapType]) {
+        this.placeholders = markerPlaceholders[mapType];
+      } else {
+        console.warn(`No marker placeholders found for mapType: ${mapType}`);
+        this.placeholders = [];
+      }
+    },
+    getMarkerImageUrl() {
+      // Return the URL of the default marker image
+      return `https://felixdallaire.github.io/svg-hosting/markers/default.svg`;
+    },
+    onMarkerClick(marker) {
+      console.log(`Marker clicked:`, marker);
+      this.selectedMarker = marker; // Set the clicked marker as selected
+      this.isModalVisible = true; // Show the modal
+    },
+    closeModal() {
+      this.isModalVisible = false; // Hide the modal
+      this.selectedMarker = null; // Reset the selected marker
+    },
+  },
+};
+</script>
+
+<style scoped>
+.map-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-image {
+  width: auto;
+  height: 100%;
+  display: block;
+  object-fit: contain; /* Ensures the map fits while maintaining aspect ratio */
+}
+
+.marker-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.marker-icon {
+  cursor: pointer;
+  pointer-events: all; /* Make markers clickable */
+}
+</style>
