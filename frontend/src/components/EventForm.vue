@@ -16,10 +16,10 @@
 
     <div class="mb-5">
       <div class="d-flex align-items-center gap-2">
-        <label for="eventStartDate" class="form-label text-uppercase m-0">De:</label>
+        <label for="eventStartDate" class="form-label text-uppercase m-0">De :</label>
         <input type="date" id="eventStartDate" v-model="form.startDate"
           class="form-control border border-black border-2" :min="today" required />
-        <label for="eventEndDate" class="form-label text-uppercase m-0">À:</label>
+        <label for="eventEndDate" class="form-label text-uppercase m-0">À :</label>
         <input type="date" id="eventEndDate" v-model="form.endDate" class="form-control border border-black border-2"
           :min="form.startDate || today" required />
       </div>

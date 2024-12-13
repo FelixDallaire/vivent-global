@@ -31,7 +31,7 @@
       <label for="role" class="form-label text-uppercase">Rôle</label>
       <select id="role" class="form-select border border-black border-2" v-model="role" required>
         <option value="" disabled>Choisissez un rôle</option>
-        <option value="Participant">Participant</option>
+        <option disabled value="Participant">Participant</option>
         <option value="Organizer">Organisateur</option>
       </select>
       <div class="invalid-feedback">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="text-center mb-4">
-      <button type="submit" class="btn btn-outline-dark text-uppercase border-2">C'est parti</button>
+      <button type="submit" class="btn btn-outline-dark text-uppercase border-2">S'inscrire</button>
     </div>
 
     <p v-if="error" class="text-danger mt-3 text-center">{{ error }}</p>

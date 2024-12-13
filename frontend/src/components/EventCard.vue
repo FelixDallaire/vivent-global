@@ -1,12 +1,12 @@
 <template>
   <div class="event-card rounded shadow text-light p-3 mb-3" @click="navigateToMapEditing">
     <h3>{{ event.name }}</h3>
-    <p>{{ event.description || 'No description provided.' }}</p>
+    <p>{{ event.description || 'Aucune description fournie.' }}</p>
     <div class="date-info">
-      <p><strong>Start Date:</strong> {{ formatDate(event.startDate) }}</p>
-      <p><strong>End Date:</strong> {{ formatDate(event.endDate) }}</p>
+      <p><strong>Date de début :</strong> {{ formatDate(event.startDate) }}</p>
+      <p><strong>Date de fin :</strong> {{ formatDate(event.endDate) }}</p>
     </div>
-    <p><strong>Map Type:</strong> {{ event.mapType }}</p>
+    <p><strong>Type de carte :</strong> {{ event.mapType }}</p>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
       if (event.value._id) {
         router.push({ name: 'MapEditing', params: { eventId: event.value._id } });
       } else {
-        console.error('Event ID is undefined');
+        console.error('L\'ID de l\'événement est indéfini');
       }
     }
 
@@ -34,8 +34,8 @@ export default {
   },
   methods: {
     formatDate(date) {
-      if (!date) return 'N/A';
-      return new Date(date).toLocaleDateString('en-US', {
+      if (!date) return 'N/D';
+      return new Date(date).toLocaleDateString('fr-FR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

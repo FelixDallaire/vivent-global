@@ -2,7 +2,7 @@
   <div class="map-container">
     <div v-if="isLoading" class="loading-container">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+        <span class="visually-hidden">Chargement...</span>
       </div>
     </div>
 
@@ -22,7 +22,7 @@
 
     <button class="save-dashboard-button btn rounded shadow-sm z-3 px-4 py-2 fw-semibold text-light text-uppercase"
       @click="saveAndGoToDashboard">
-      Save and Go to Dashboard
+      Sauvegarder et aller au tableau de bord
     </button>
 
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true"
@@ -30,24 +30,24 @@
       <div class="modal-dialog">
         <div class="modal-content" v-if="selectedMarker">
           <div class="modal-header">
-            <h5 class="modal-title" id="markerModalLabel">Edit Marker</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="markerModalLabel">Modifier le marqueur</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="markerName" class="form-label text-uppercase">Marker Name</label>
+              <label for="markerName" class="form-label text-uppercase">Nom du marqueur</label>
               <input type="text" id="markerName" v-model="selectedMarker.name"
                 class="form-control border border-black border-2" />
             </div>
 
             <div class="mb-3">
-              <label for="markerDescription" class="form-label text-uppercase">Marker Description</label>
+              <label for="markerDescription" class="form-label text-uppercase">Description du marqueur</label>
               <textarea id="markerDescription" v-model="selectedMarker.description"
                 class="form-control border border-black border-2"></textarea>
             </div>
 
             <div>
-              <label class="form-label">Marker Type</label>
+              <label class="form-label">Type de marqueur</label>
               <div class="d-flex flex-wrap gap-2">
                 <img v-for="type in markerTypes" :key="type"
                   :src="'https://felixdallaire.github.io/svg-hosting/markers/' + type" :alt="type"
@@ -58,16 +58,16 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger border-2 text-uppercase"
-              @click="closeModal">Close</button>
-            <button type="button" class="btn btn-outline-dark fw-bold border-2 text-uppercase" @click="saveMarker">Save
-              Changes</button>
+              @click="closeModal">Fermer</button>
+            <button type="button" class="btn btn-outline-dark fw-bold border-2 text-uppercase" @click="saveMarker">
+              Sauvegarder
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { useMarkerStore } from "@/stores/marker";
@@ -101,7 +101,6 @@ export default {
   },
   async mounted() {
     try {
-      console.log("[mounted] Fetching event and markers...");
       await this.fetchEvent();
       await this.fetchMarkers();
 
@@ -110,7 +109,7 @@ export default {
 
       this.isLoading = false;
     } catch (error) {
-      console.error("[mounted] Error during initialization:", error);
+      console.error("[mounted] Erreur lors de l'initialisation :", error);
       this.isLoading = false;
     }
   },
@@ -123,30 +122,24 @@ export default {
         if (event) {
           if (event.mapType) {
             this.mapType = event.mapType;
-            console.log("[fetchEvent] Fetched map type:", this.mapType);
           } else {
-            console.warn("[fetchEvent] No map type found. Redirecting to MapSelection...");
+            console.warn("[fetchEvent] Aucun type de carte trouvé. Redirection vers la sélection de carte...");
             this.$router.push({ name: 'MapSelection', params: { eventId: this.eventId } });
           }
         } else {
-          console.error("[fetchEvent] Event not found.");
-          alert("Event not found.");
+          console.error("[fetchEvent] Événement non trouvé.");
+          alert("Événement non trouvé.");
         }
       } catch (error) {
-        console.error("[fetchEvent] Error fetching event:", error);
-        alert("An error occurred while fetching the event.");
+        console.error("[fetchEvent] Erreur lors de la récupération de l'événement :", error);
+        alert("Une erreur est survenue lors de la récupération de l'événement.");
       }
     },
     async fetchMarkers() {
       const markerStore = useMarkerStore();
       try {
-        console.log("[fetchMarkers] Fetching markers for event ID:", this.eventId);
         await markerStore.fetchMarkersForEvent(this.eventId);
-
-        console.log("[fetchMarkers] Fetched markers from store:", markerStore.markers);
-
         const placeholders = markerPlaceholders[this.mapType] || [];
-        console.log("[fetchMarkers] Placeholders for map type:", this.mapType, placeholders);
 
         this.markers = placeholders
           .map((placeholder) => {
@@ -159,17 +152,15 @@ export default {
           })
           .filter((marker) => marker !== undefined);
 
-        console.log("[fetchMarkers] Combined markers:", this.markers);
       } catch (error) {
-        console.error("[fetchMarkers] Error fetching markers:", error);
+        console.error("[fetchMarkers] Erreur lors de la récupération des marqueurs :", error);
       }
     },
     selectMarker(marker) {
       if (!marker) {
-        console.error("[selectMarker] Cannot select marker: marker is undefined");
+        console.error("[selectMarker] Impossible de sélectionner le marqueur : marqueur indéfini");
         return;
       }
-      console.log("[selectMarker] Selected marker:", marker);
       this.selectedMarker = { ...marker };
 
       this.modalInstance.show();
@@ -181,19 +172,19 @@ export default {
     },
     selectMarkerType(type) {
       if (!this.selectedMarker) {
-        console.error("[selectMarkerType] Cannot select type: No marker selected");
+        console.error("[selectMarkerType] Impossible de sélectionner un type : aucun marqueur sélectionné");
         return;
       }
-      console.log("[selectMarkerType] Changing marker type to:", type);
+      console.log("[selectMarkerType] Changement du type de marqueur en :", type);
       this.selectedMarker.type = type;
     },
     async saveMarker() {
       try {
-        console.log("[saveMarker] Saving marker:", this.selectedMarker);
+        console.log("[saveMarker] Sauvegarde du marqueur :", this.selectedMarker);
         const markerStore = useMarkerStore();
 
         if (this.selectedMarker.isPlaceholder) {
-          console.log("[saveMarker] Creating new marker...");
+          console.log("[saveMarker] Création d'un nouveau marqueur...");
           const newMarker = await markerStore.addMarker({
             eventId: this.eventId,
             x: this.selectedMarker.x,
@@ -204,11 +195,11 @@ export default {
           });
 
           if (!newMarker) {
-            console.error("[saveMarker] Failed to create new marker");
+            console.error("[saveMarker] Échec de la création du nouveau marqueur");
             return;
           }
 
-          console.log("[saveMarker] Created new marker:", newMarker);
+          console.log("[saveMarker] Nouveau marqueur créé :", newMarker);
 
           const index = this.markers.findIndex(
             (marker) => marker.placeholderId === this.selectedMarker.placeholderId
@@ -218,11 +209,11 @@ export default {
           }
         } else {
           if (!this.selectedMarker.id) {
-            console.error("[saveMarker] Marker ID is undefined for update");
+            console.error("[saveMarker] ID du marqueur indéfini pour la mise à jour");
             return;
           }
 
-          console.log("[saveMarker] Updating existing marker...");
+          console.log("[saveMarker] Mise à jour du marqueur existant...");
           await markerStore.updateMarker(this.selectedMarker.id, {
             name: this.selectedMarker.name,
             description: this.selectedMarker.description,
@@ -237,15 +228,15 @@ export default {
 
         this.closeModal();
       } catch (error) {
-        console.error("[saveMarker] Error saving marker:", error);
+        console.error("[saveMarker] Erreur lors de la sauvegarde du marqueur :", error);
       }
     },
     async saveAndGoToDashboard() {
       try {
         this.$router.push({ name: 'Dashboard' });
       } catch (error) {
-        console.error("[saveAndGoToDashboard] Error redirecting to dashboard:", error);
-        alert("An error occurred while saving and redirecting.");
+        console.error("[saveAndGoToDashboard] Erreur lors de la redirection vers le tableau de bord :", error);
+        alert("Une erreur est survenue lors de la sauvegarde et de la redirection.");
       }
     },
   },
@@ -265,7 +256,6 @@ body {
   width: 100vw;
   height: calc(100vh - var(--navbar-height));
   overflow: hidden;
-
 }
 
 .map-content {

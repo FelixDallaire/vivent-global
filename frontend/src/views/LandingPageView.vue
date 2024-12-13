@@ -5,7 +5,7 @@
       <h1 class="text-center text-light fs-4">L’expérience événementielle, autrement.</h1>
       <router-link class="btn btn-dark fw-bold px-5 py-2 mt-3 color-vivent-pink d-inline-block"
         :to="isAuthenticated ? '/dashboard' : '/login'">
-        C'est Parti!
+        C'est parti !
         <i class="bi bi-rocket-takeoff-fill"></i>
       </router-link>
     </div>

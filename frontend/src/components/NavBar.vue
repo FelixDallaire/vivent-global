@@ -6,7 +6,7 @@
       </router-link>
 
       <router-link v-if="isAuthenticated" to="/dashboard"
-        class="nav-link mx-auto text-uppercase text-white">Dashboard</router-link>
+        class="nav-link mx-auto text-uppercase text-white">Tableau de bord</router-link>
 
       <div class="navbar-collapse">
         <ul class="navbar-nav ms-auto d-flex align-items-center">
@@ -19,23 +19,23 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                  <a class="dropdown-item disabled" href="#">Profile</a>
+                  <a class="dropdown-item disabled" href="#">Profil</a>
                 </li>
                 <li v-if="isOrganizer">
-                  <router-link class="dropdown-item" to="/add-event">Add event</router-link>
+                  <router-link class="dropdown-item" to="/add-event">Ajouter un événement</router-link>
                 </li>
                 <li>
-                  <button @click="logout" class="dropdown-item text-danger">Logout</button>
+                  <button @click="logout" class="dropdown-item text-danger">Déconnexion</button>
                 </li>
               </ul>
             </li>
           </template>
           <template v-else>
             <li class="nav-item">
-              <router-link to="/login" class="nav-link text-uppercase text-white">Login</router-link>
+              <router-link to="/login" class="nav-link text-uppercase text-white">Connexion</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/register" class="nav-link text-uppercase text-white">Register</router-link>
+              <router-link to="/register" class="nav-link text-uppercase text-white">Inscription</router-link>
             </li>
           </template>
         </ul>

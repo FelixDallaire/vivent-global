@@ -1,8 +1,8 @@
 <template>
   <div class="m-auto p-3 text-center w-50 text-light">
-    <h1>Welcome, {{ username }}!</h1>
-    <p v-if="isOrganizer">You have the ability to manage and create Events.</p>
-    <p v-else>You can explore events and engage with them.</p>
+    <h1>Bienvenue, {{ username }} !</h1>
+    <p v-if="isOrganizer">Vous avez la possibilité de gérer et de créer des événements.</p>
+    <p v-else>Vous pouvez explorer les événements et interagir avec eux.</p>
     <EventList />
   </div>
 </template>

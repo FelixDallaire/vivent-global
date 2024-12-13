@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-center align-items-center addEvent-container ">
     <div class="addEvent-wrapper m-auto p-4 text-center rounded shadow">
-      <h1>{{ eventId ? 'Edit Event' : 'Add New Event' }}</h1>
+      <h1>{{ eventId ? 'Modifier l\'événement' : 'Ajouter un nouvel événement' }}</h1>
       <EventForm :initialData="event" @form-submit="handleFormSubmit" />
     </div>
   </div>
@@ -44,11 +44,10 @@ export default {
           : await eventStore.addEvent(formData);
         router.push({ name: 'MapSelection', params: { eventId: currentEvent._id } });
       } catch (error) {
-        console.error('Error submitting event:', error);
-        alert(error.response?.data?.message || 'An error occurred while submitting the event.');
+        console.error('Erreur lors de la soumission de l\'événement :', error);
+        alert(error.response?.data?.message || 'Une erreur est survenue lors de la soumission de l\'événement.');
       }
     };
-
 
     return { eventId, event, handleFormSubmit };
   }

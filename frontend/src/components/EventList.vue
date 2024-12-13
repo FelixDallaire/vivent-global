@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h2>Event List</h2>
+    <h2>Liste des événements</h2>
     <div v-if="events.length > 0">
       <EventCard v-for="event in events" :key="event._id" :event="event" />
     </div>
     <div v-else>
-      <p>You currently have no events.</p>
+      <p>Vous n'avez actuellement aucun événement.</p>
     </div>
   </div>
 </template>

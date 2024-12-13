@@ -57,14 +57,14 @@ export default {
 
     const updatePreview = () => {
       selectedMapImageUrl.value = selectedMapImage.value ? `https://felixdallaire.github.io/svg-hosting/maps/${selectedMapImage.value}` : "";
-    }
+    };
 
     const confirmMapSelection = async () => {
       try {
         await eventStore.updateEvent(props.eventId, { mapType: selectedMapImage.value });
         router.push({ name: "MapEditing", params: { eventId: props.eventId } });
       } catch (error) {
-        console.error("Failed to update event with selected map:", error);
+        console.error("Échec de la mise à jour de l'événement :", error);
         alert("Échec de la mise à jour de l'événement : " + error.message);
       }
     };
