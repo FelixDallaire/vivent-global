@@ -46,8 +46,10 @@ authController.register = async (req, res) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
+    // Ensure role is a string, then trim and lowercase
+    const trimmedRole = typeof role === "string" ? role.trim().toLowerCase() : "";
     const validRoles = ["participant", "organizer"];
-    const userRole = validRoles.includes(role) ? role : "participant";
+    const userRole = validRoles.includes(trimmedRole) ? trimmedRole : "participant";
 
     const newUser = new User({
       username,
@@ -56,6 +58,7 @@ authController.register = async (req, res) => {
       avatar: avatarUrl,
     });
 
+    console.warn(newUser);
     await newUser.save();
 
     const token = generateToken(newUser);
@@ -70,6 +73,7 @@ authController.register = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 authController.login = async (req, res) => {
   try {

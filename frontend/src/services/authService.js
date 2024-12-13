@@ -8,8 +8,9 @@ import api from './api';
  * @param {String} password 
  * @returns {Promise<Object>} Données de l'utilisateur et token
  */
-export async function registerUser(username, password) {
-  const response = await api.post('/auth/register', { username, password });
+export async function registerUser(username, password, role) {
+  console.warn(role)
+  const response = await api.post('/auth/register', { username, password, role});
   return response.data;
 }
 

@@ -30,6 +30,18 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
+    async register(username, password, role) {
+      try {
+        const data = await registerUser(username, password, role);
+        this.token = data.token;
+        localStorage.setItem("token", this.token);
+        const userStore = useUserStore();
+        userStore.setUser(data.user);
+      } catch (error) {
+        throw error;
+      }
+    },
+
     async logout() {
       try {
         await logoutUser();

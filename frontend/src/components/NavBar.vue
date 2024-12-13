@@ -19,7 +19,7 @@
             <!-- Avatar as a dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img :src="avatar" alt="Avatar" class="sp-1 rounded-circle border border-success border-3" height="40">
+                <img :src="avatar" alt="Avatar" class="sp-1 rounded-circle border border-white p-1 border-3" height="40">
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>

@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="handleRegister" class="needs-validation text-start" novalidate>
+    <!-- Username -->
     <div class="mb-3">
       <label for="username" class="form-label text-uppercase">Nom d'utilisateur</label>
       <input type="text" class="form-control border border-black border-2" id="username" v-model="username" required
@@ -8,6 +9,8 @@
         Veuillez entrer votre nom d'utilisateur.
       </div>
     </div>
+    
+    <!-- Password -->
     <div class="mb-3">
       <label for="password" class="form-label text-uppercase">Mot de passe</label>
       <input type="password" class="form-control border border-black border-2" id="password" v-model="password" required
@@ -16,6 +19,8 @@
         Veuillez entrer votre mot de passe.
       </div>
     </div>
+    
+    <!-- Confirm Password -->
     <div class="mb-3">
       <label for="confirmPassword" class="form-label text-uppercase">Confirmez le mot de passe</label>
       <input type="password" class="form-control border border-black border-2" id="confirmPassword"
@@ -24,9 +29,26 @@
         Veuillez confirmer votre mot de passe.
       </div>
     </div>
-    <div class="text-center mb-4">
-      <button type="submit" class="btn btn-outline-dark text-uppercase border-2">C'est parti </button>
+    
+    <!-- Role Selection -->
+    <div class="mb-3">
+      <label for="role" class="form-label text-uppercase">Rôle</label>
+      <select id="role" class="form-select border border-black border-2" v-model="role" required>
+        <option value="" disabled>Choisissez un rôle</option>
+        <option value="Participant">Participant</option>
+        <option value="Organizer">Organisateur</option>
+      </select>
+      <div class="invalid-feedback">
+        Veuillez sélectionner un rôle.
+      </div>
     </div>
+
+    <!-- Submit Button -->
+    <div class="text-center mb-4">
+      <button type="submit" class="btn btn-outline-dark text-uppercase border-2">C'est parti</button>
+    </div>
+    
+    <!-- Error Message -->
     <p v-if="error" class="text-danger mt-3 text-center">{{ error }}</p>
   </form>
 </template>
@@ -42,6 +64,7 @@ export default {
     const username = ref("");
     const password = ref("");
     const confirmPassword = ref("");
+    const role = ref(""); // Added role selection
     const error = ref(null);
     const authStore = useAuthStore();
     const router = useRouter();
@@ -52,7 +75,13 @@ export default {
           error.value = "Les mots de passe ne correspondent pas.";
           return;
         }
-        await authStore.register(username.value, password.value);
+        if (!role.value) {
+          error.value = "Veuillez sélectionner un rôle.";
+          return;
+        }
+
+        console.log(role.value)
+        await authStore.register(username.value, password.value, role.value);
         router.push("/dashboard");
       } catch (err) {
         error.value = "Une erreur s'est produite. Veuillez réessayer.";
@@ -63,6 +92,7 @@ export default {
       username,
       password,
       confirmPassword,
+      role,
       handleRegister,
       error,
     };
