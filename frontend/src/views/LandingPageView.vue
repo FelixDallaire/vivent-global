@@ -1,42 +1,52 @@
 <template>
-  <div class="landing-page text-center">
-    <div class="container py-5">
-      <h1 class="display-4 mb-4">Bienvenue à Notre Application</h1>
-      <p class="lead mb-5">
-        Gérez vos événements facilement et efficacement. Connectez-vous ou inscrivez-vous dès maintenant pour commencer !
-      </p>
-      <div>
-        <router-link to="/login" class="btn btn-primary btn-lg me-3">
-          <i class="bi bi-box-arrow-in-right"></i> Connexion
-        </router-link>
-        <router-link to="/register" class="btn btn-outline-primary btn-lg">
-          <i class="bi bi-person-plus"></i> Inscription
-        </router-link>
-      </div>
+  <div class="d-flex justify-content-center align-items-center landing-page w-100">
+    <div class="text-center">
+      <img src="@/assets/logo_funky.svg" alt="Logo" class="mb-4" height="300" />
+      <h1 class="text-center text-light fs-4">L’expérience événementielle, autrement.</h1>
+      <router-link class="btn btn-dark fw-bold px-5 py-2 mt-3 color-vivent-pink d-inline-block" 
+                   :to="isAuthenticated ? '/dashboard' : '/login'">
+        C'est Parti!
+        <i class="bi bi-rocket-takeoff-fill"></i>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/auth';
+import { computed } from 'vue';
+
 export default {
   name: 'LandingPageView',
+  setup(){
+    const authStore = useAuthStore();
+    const isAuthenticated = computed(() => authStore.isAuthenticated);
+
+    return {
+      isAuthenticated
+    }
+  }
 };
 </script>
 
 <style scoped>
 .landing-page {
-  background: url('../assets/landing-background.jpg') no-repeat center center;
-  background-size: cover;
-  color: white;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
+}
+
+.color-vivent-pink { 
+  color: #A14DD8 !important;
 }
 
 .landing-page .container {
   background: rgba(0, 0, 0, 0.6);
   padding: 2rem;
   border-radius: 0.5rem;
+}
+
+.text-center .btn {
+  margin: 0 auto; /* Centre horizontalement */
+  display: block; /* Assure que le bouton reste au centre */
 }
 </style>

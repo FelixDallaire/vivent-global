@@ -285,10 +285,6 @@ body {
   /* Adjust height to exclude navbar */
   overflow: hidden;
 
-  background-image: url(https://felixdallaire.github.io/svg-hosting/city_background.png);
-  background-position: bottom;
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 .map-content {
