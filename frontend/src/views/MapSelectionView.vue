@@ -3,7 +3,6 @@
     <div class="card shadow rounded-4 p-4">
       <h4 class="text-center text-uppercase mb-4">Sélectionnez une Carte</h4>
 
-      <!-- Map Selection -->
       <div class="form-group mb-4">
         <label for="mapSelect" class="form-label text-uppercase">Type de Carte</label>
         <select id="mapSelect" v-model="selectedMapImage" class="form-select border border-black border-2"
@@ -16,7 +15,6 @@
         <div class="invalid-feedback" v-if="!selectedMapImage">Veuillez sélectionner une carte.</div>
       </div>
 
-      <!-- Larger Preview Section -->
       <div class="map-preview-container text-center my-4">
         <h6 class="text-uppercase mb-3 fw-semibold">Aperçu de la Carte</h6>
         <div class="preview-box rounded-4 shadow-sm">
@@ -26,7 +24,6 @@
         </div>
       </div>
 
-      <!-- Confirm Button -->
       <div class="text-center">
         <button :disabled="!selectedMapImage" class="btn btn-outline-dark text-uppercase border-2"
           @click="confirmMapSelection">
@@ -108,7 +105,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 400px;
-  /* Increased height for larger preview */
   background-color: whitesmoke;
   border: 2px dashed #ddd;
   overflow: hidden;

@@ -3,32 +3,30 @@
     <h1>Welcome, {{ username }}!</h1>
     <p v-if="isOrganizer">You have the ability to manage and create Events.</p>
     <p v-else>You can explore events and engage with them.</p>
-    <!-- Event List Component included here -->
     <EventList />
   </div>
 </template>
 
 <script>
 import { useUserStore } from '@/stores/user';
-import { useEventStore } from '@/stores/event'; // Import EventStore
+import { useEventStore } from '@/stores/event';
 import { computed, onMounted } from 'vue';
 import EventList from '../components/EventList.vue';
 
 export default {
   name: 'DashboardView',
   components: {
-    EventList // Registering the EventList component for use
+    EventList
   },
   setup() {
     const userStore = useUserStore();
-    const eventStore = useEventStore(); // Use the EventStore
+    const eventStore = useEventStore();
 
     const isOrganizer = computed(() => userStore.isOrganizer);
     const username = computed(() => userStore.username);
 
-    // Fetch events when component mounts
     onMounted(() => {
-      eventStore.fetchEvents(); // Call fetchEvents from EventStore
+      eventStore.fetchEvents();
     });
 
     return {

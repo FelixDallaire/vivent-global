@@ -1,6 +1,10 @@
-// src/store/event.js
 import { defineStore } from "pinia";
-import { listEvents, getEventById, createEvent, updateEvent } from "@/services/EventService";
+import {
+  listEvents,
+  getEventById,
+  createEvent,
+  updateEvent,
+} from "@/services/EventService";
 
 export const useEventStore = defineStore("event", {
   state: () => ({
@@ -35,9 +39,9 @@ export const useEventStore = defineStore("event", {
     async updateEvent(id, eventData) {
       try {
         const updatedEvent = await updateEvent(id, eventData);
-        const index = this.events.findIndex(event => event._id === id);
+        const index = this.events.findIndex((event) => event._id === id);
         if (index !== -1) {
-          this.events[index] = {...this.events[index], ...updatedEvent};
+          this.events[index] = { ...this.events[index], ...updatedEvent };
         }
         return updatedEvent;
       } catch (error) {
@@ -47,7 +51,7 @@ export const useEventStore = defineStore("event", {
     },
     resetEvents() {
       this.events = [];
-    }
+    },
   },
   persist: {
     key: "event-store",

@@ -1,8 +1,6 @@
 const Event = require('../models/Event');
 
 module.exports = {
-  // GET /events
-  // List all events belonging to the logged-in organizer
   listEvents: async (req, res) => {
     try {
       const events = await Event.find({ organizerId: req.user.userId });
@@ -13,8 +11,6 @@ module.exports = {
     }
   },
 
-  // GET /events/:id
-  // Get a single event by its ID, ensuring it belongs to the logged-in organizer
   getEventById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -29,8 +25,6 @@ module.exports = {
     }
   },
 
-  // POST /events
-  // Create a new event for the logged-in organizer
   createEvent: async (req, res) => {
     try {
       const { name, description, startDate, endDate, mapType } = req.body;
@@ -55,8 +49,6 @@ module.exports = {
     }
   },
 
-  // PATCH /events/:id
-  // Update event details (name, description, start/end dates, mapType)
   updateEvent: async (req, res) => {
     try {
       const { id } = req.params;

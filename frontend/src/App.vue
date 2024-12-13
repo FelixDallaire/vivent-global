@@ -37,7 +37,7 @@ const containerClass = computed(() => {
   const editMapRoute = 'MapEditing';
 
   if (route.name === editMapRoute) {
-    return 'container m-0 p-0'; // Specific class for EditMap
+    return 'container m-0 p-0';
   }
 
   if (fullHeightRoutes.includes(route.name)) {
@@ -53,6 +53,4 @@ const containerClass = computed(() => {
 
 <style lang="scss">
 @use './assets/styles/main';
-
-// Apply additional styles for the full-height views if needed
 </style>

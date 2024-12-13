@@ -3,8 +3,8 @@
     <div class="text-center">
       <img src="@/assets/logo_funky.svg" alt="Logo" class="mb-4" height="300" />
       <h1 class="text-center text-light fs-4">L’expérience événementielle, autrement.</h1>
-      <router-link class="btn btn-dark fw-bold px-5 py-2 mt-3 color-vivent-pink d-inline-block" 
-                   :to="isAuthenticated ? '/dashboard' : '/login'">
+      <router-link class="btn btn-dark fw-bold px-5 py-2 mt-3 color-vivent-pink d-inline-block"
+        :to="isAuthenticated ? '/dashboard' : '/login'">
         C'est Parti!
         <i class="bi bi-rocket-takeoff-fill"></i>
       </router-link>
@@ -18,7 +18,7 @@ import { computed } from 'vue';
 
 export default {
   name: 'LandingPageView',
-  setup(){
+  setup() {
     const authStore = useAuthStore();
     const isAuthenticated = computed(() => authStore.isAuthenticated);
 
@@ -35,7 +35,7 @@ export default {
   width: 100%;
 }
 
-.color-vivent-pink { 
+.color-vivent-pink {
   color: #A14DD8 !important;
 }
 
@@ -46,7 +46,7 @@ export default {
 }
 
 .text-center .btn {
-  margin: 0 auto; /* Centre horizontalement */
-  display: block; /* Assure que le bouton reste au centre */
+  margin: 0 auto;
+  display: block;
 }
 </style>

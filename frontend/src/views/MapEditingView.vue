@@ -1,25 +1,18 @@
 <template>
   <div class="map-container">
-    <!-- Loader -->
     <div v-if="isLoading" class="loading-container">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
 
-    <!-- Map and Markers -->
     <div v-else class="map-content rounded-4 shadow">
-      <!-- SVG Map -->
       <svg class="map-image rounded-4 shadow" :viewBox="'0 0 360 280'" preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg">
-        <!-- Map Background -->
         <image :href="'https://felixdallaire.github.io/svg-hosting/maps/' + mapType" width="360" height="280" />
 
-        <!-- Markers -->
         <g v-for="marker in markers" :key="marker.id || marker.placeholderId">
-          <!-- Circle Background -->
           <circle :cx="marker.x * 3.6" :cy="marker.y * 2.8" r="11" fill="whitesmoke" />
-          <!-- Marker Icon -->
           <image :x="marker.x * 3.6 - 10" :y="marker.y * 2.8 - 10" width="20" height="20"
             :href="'https://felixdallaire.github.io/svg-hosting/markers/' + (marker.type || 'default.svg')"
             :alt="marker.name" class="marker" @click.stop="selectMarker(marker)" />
@@ -27,13 +20,11 @@
       </svg>
     </div>
 
-    <!-- Save and Go to Dashboard Button -->
     <button class="save-dashboard-button btn rounded shadow-sm z-3 px-4 py-2 fw-semibold text-light text-uppercase"
       @click="saveAndGoToDashboard">
       Save and Go to Dashboard
     </button>
 
-    <!-- Bootstrap Modal -->
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true"
       ref="markerModal">
       <div class="modal-dialog">
@@ -43,21 +34,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- Marker Name -->
             <div class="mb-3">
               <label for="markerName" class="form-label text-uppercase">Marker Name</label>
               <input type="text" id="markerName" v-model="selectedMarker.name"
                 class="form-control border border-black border-2" />
             </div>
 
-            <!-- Marker Description -->
             <div class="mb-3">
               <label for="markerDescription" class="form-label text-uppercase">Marker Description</label>
               <textarea id="markerDescription" v-model="selectedMarker.description"
                 class="form-control border border-black border-2"></textarea>
             </div>
 
-            <!-- Marker Type -->
             <div>
               <label class="form-label">Marker Type</label>
               <div class="d-flex flex-wrap gap-2">
@@ -71,8 +59,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger border-2 text-uppercase"
               @click="closeModal">Close</button>
-            <button type="button" class="btn btn-outline-dark fw-bold border-2 text-uppercase"
-              @click="saveMarker">Save
+            <button type="button" class="btn btn-outline-dark fw-bold border-2 text-uppercase" @click="saveMarker">Save
               Changes</button>
           </div>
         </div>
@@ -97,10 +84,10 @@ export default {
   },
   data() {
     return {
-      mapType: null, // Dynamically fetched
+      mapType: null,
       markers: [],
       selectedMarker: null,
-      isLoading: true, // Loader flag
+      isLoading: true,
       markerTypes: [
         "default.svg",
         "tent_small.svg",
@@ -109,23 +96,22 @@ export default {
         "tent_big.svg",
         "big_stage.svg",
       ],
-      modalInstance: null, // To store the modal instance
+      modalInstance: null,
     };
   },
   async mounted() {
     try {
       console.log("[mounted] Fetching event and markers...");
-      await this.fetchEvent(); // Fetch the event to get the mapType
-      await this.fetchMarkers(); // Fetch markers once the mapType is loaded
+      await this.fetchEvent();
+      await this.fetchMarkers();
 
-      // Initialize modal
       const modalElement = this.$refs.markerModal;
       this.modalInstance = new bootstrap.Modal(modalElement);
 
-      this.isLoading = false; // Set loader flag to false
+      this.isLoading = false;
     } catch (error) {
       console.error("[mounted] Error during initialization:", error);
-      this.isLoading = false; // Ensure loader hides on error
+      this.isLoading = false;
     }
   },
   methods: {
@@ -186,7 +172,6 @@ export default {
       console.log("[selectMarker] Selected marker:", marker);
       this.selectedMarker = { ...marker };
 
-      // Show modal programmatically
       this.modalInstance.show();
     },
     closeModal() {
@@ -250,7 +235,6 @@ export default {
           }
         }
 
-        // Close modal after saving
         this.closeModal();
       } catch (error) {
         console.error("[saveMarker] Error saving marker:", error);
@@ -272,7 +256,6 @@ export default {
 body {
   margin: 0;
   overflow: hidden;
-  /* Prevent overflow for full-height views */
 }
 
 .map-container {
@@ -280,18 +263,14 @@ body {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  /* Full viewport width */
   height: calc(100vh - var(--navbar-height));
-  /* Adjust height to exclude navbar */
   overflow: hidden;
 
 }
 
 .map-content {
   height: 90%;
-  /* Occupy 90% of the container height */
   aspect-ratio: 360 / 280;
-  /* Maintain the aspect ratio */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -301,11 +280,8 @@ body {
 
 .map-image {
   height: 100%;
-  /* Fill the height of .map-content */
   width: auto;
-  /* Maintain aspect ratio */
   object-fit: contain;
-  /* Ensure proper scaling */
   display: block;
 }
 
@@ -314,9 +290,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 100vw;
-  /* Full viewport width */
   height: 100%;
-  /* Match container height */
   background-color: #f8f9fa;
   z-index: 10;
 }

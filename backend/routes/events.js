@@ -3,7 +3,6 @@ const router = express.Router();
 const eventController = require('../controllers/eventController');
 const auth = require('../middlewares/auth');
 
-// Require valid JWT for all event routes
 router.use(auth);
 
 // GET /events - List all events belonging to the logged-in organizer

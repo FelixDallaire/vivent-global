@@ -26,9 +26,7 @@ function handleAuthError(res, statusCode, message) {
 }
 
 function generateAvatar(username) {
-  // Replace spaces with plus sign for URL compatibility
   const formattedName = encodeURIComponent(username);
-  // Using UI Avatars API
   return `https://ui-avatars.com/api/?name=${formattedName}&size=128&background=random&color=fff&length=2&font-size=0.4&rounded=true`;
 }
 
@@ -46,7 +44,6 @@ authController.register = async (req, res) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    // Ensure role is a string, then trim and lowercase
     const trimmedRole = typeof role === "string" ? role.trim().toLowerCase() : "";
     const validRoles = ["participant", "organizer"];
     const userRole = validRoles.includes(trimmedRole) ? trimmedRole : "participant";

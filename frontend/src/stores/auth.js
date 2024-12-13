@@ -1,4 +1,3 @@
-// src/store/auth.js
 import { defineStore } from "pinia";
 import { loginUser, registerUser, logoutUser } from "../services/authService";
 import { useUserStore } from "./user";
@@ -20,10 +19,8 @@ export const useAuthStore = defineStore("auth", {
         const userStore = useUserStore();
         userStore.setUser(data.user);
 
-        // After login, fetch events if user is authenticated
         const eventStore = useEventStore();
-        await eventStore.fetchEvents();  // Make sure events are fetched after login
-
+        await eventStore.fetchEvents();
       } catch (error) {
         console.error("Login failed:", error);
         throw error;

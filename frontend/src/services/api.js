@@ -1,10 +1,8 @@
-// src/services/api.js
-
-import axios from 'axios';
-import { useAuthStore } from '../stores/auth';
+import axios from "axios";
+import { useAuthStore } from "../stores/auth";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: "http://localhost:3000/api",
 });
 
 api.interceptors.request.use(

@@ -1,40 +1,42 @@
-// Variables
 $base-dark-color: #1d1a18;
-$vivent-purple-base: #5C0083;
+$vivent-purple-base: #5c0083;
 $vivent-purple-dark: #341c3e;
-$vivent-purple-light: #A14DD8;
-$vivent-font-light-path: '@/assets/fonts/vivent_font_light.woff2';
-$vivent-font-bold-path: '@/assets/fonts/vivent_font_bold.woff2';
-$font-light: 'ViventLight';
-$font-bold: 'ViventBold';
+$vivent-purple-light: #a14dd8;
+$vivent-font-light-path: "@/assets/fonts/vivent_font_light.woff2";
+$vivent-font-bold-path: "@/assets/fonts/vivent_font_bold.woff2";
+$font-light: "ViventLight";
+$font-bold: "ViventBold";
 
-// @font-face Definitions
 @font-face {
-  font-family: 'ViventLight';
-  src: url($vivent-font-light-path) format('woff2');
+  font-family: "ViventLight";
+  src: url($vivent-font-light-path) format("woff2");
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'ViventBold';
-  src: url($vivent-font-bold-path) format('woff2');
+  font-family: "ViventBold";
+  src: url($vivent-font-bold-path) format("woff2");
   font-weight: 800;
   font-style: normal;
 }
 
 :root {
-  --navbar-height: 65px; /* Adjust this value based on your NavBar height */
+  --navbar-height: 65px;
 }
 
-// Styles
 .navbar {
   background-color: $base-dark-color !important;
   font-family: $font-bold;
   height: var(--navbar-height);
 }
 
-h1, h2, h3, h4, h5, label {
+h1,
+h2,
+h3,
+h4,
+h5,
+label {
   font-family: $font-bold;
 }
 

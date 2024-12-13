@@ -3,7 +3,6 @@ const router = express.Router();
 const markerController = require('../controllers/markerController');
 const auth = require('../middlewares/auth');
 
-// Require valid JWT for all marker routes
 router.use(auth);
 
 // POST /events/:id/markers - Add a new marker to a specific event owned by the logged-in organizer

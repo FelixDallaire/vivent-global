@@ -1,25 +1,21 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <!-- Logo aligned to the left -->
       <router-link class="navbar-brand d-flex align-items-center" :to="'/'">
         <img src="@/assets/logo.svg" alt="Logo" class="me-2" height="25" />
       </router-link>
 
-      <!-- Centered Dashboard Link for Authenticated Users Only -->
-      <router-link v-if="isAuthenticated" to="/dashboard" class="nav-link mx-auto text-uppercase text-white">Dashboard</router-link>
+      <router-link v-if="isAuthenticated" to="/dashboard"
+        class="nav-link mx-auto text-uppercase text-white">Dashboard</router-link>
 
-      <!-- Navbar content -->
       <div class="navbar-collapse">
-        <!-- Navigation items aligned to the right -->
         <ul class="navbar-nav ms-auto d-flex align-items-center">
-          <!-- Conditionally display user or auth links -->
           <template v-if="isAuthenticated">
             <span class="fw-medium text-uppercase text-white ">{{ username }}</span>
-            <!-- Avatar as a dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img :src="avatar" alt="Avatar" class="sp-1 rounded-circle border border-white p-1 border-3" height="40">
+                <img :src="avatar" alt="Avatar" class="sp-1 rounded-circle border border-white p-1 border-3"
+                  height="40">
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
@@ -35,7 +31,6 @@
             </li>
           </template>
           <template v-else>
-            <!-- Login and Register Links for Unauthenticated Users -->
             <li class="nav-item">
               <router-link to="/login" class="nav-link text-uppercase text-white">Login</router-link>
             </li>

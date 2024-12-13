@@ -5,8 +5,8 @@ const markerSchema = new mongoose.Schema({
   x: { type: Number, required: true },
   y: { type: Number, required: true },
   type: { type: String, required: true },
-  name: { type: String, required: true }, // Name of the marker
-  description: { type: String, default: '' }, // Description of the marker
+  name: { type: String, required: true },
+  description: { type: String, default: '' }, 
 });
 
 module.exports = mongoose.model('Marker', markerSchema);

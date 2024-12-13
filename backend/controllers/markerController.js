@@ -2,8 +2,6 @@ const Marker = require('../models/Marker');
 const Event = require('../models/Event');
 
 module.exports = {
-  // POST /events/:id/markers
-  // Add a new marker to the given event, checking that the event belongs to the logged-in organizer
   createMarker: async (req, res) => {
     try {
       const { id } = req.params;
@@ -24,7 +22,7 @@ module.exports = {
         y,
         type,
         name,
-        description: description || '', // Default to empty string if not provided
+        description: description || '',
       });
       await marker.save();
       res.status(201).json(marker);
@@ -34,8 +32,6 @@ module.exports = {
     }
   },
 
-  // GET /events/:id/markers
-  // List all markers for the given event, ensuring it belongs to the logged-in organizer
   listMarkersForEvent: async (req, res) => {
     try {
       const { id } = req.params;
@@ -52,8 +48,6 @@ module.exports = {
     }
   },
 
-  // PATCH /markers/:markerId
-  // Update a single marker, ensuring the marker's event is owned by the logged-in organizer
   updateMarker: async (req, res) => {
     try {
       const { markerId } = req.params;
@@ -78,12 +72,10 @@ module.exports = {
     }
   },
 
-  // PATCH /markers/:markerId
-  // Batch update multiple markers, ensuring the marker's event is owned by the logged-in organizer
   updateMultipleMarkers: async (req, res) => {
     try {
       const { id } = req.params;
-      const { markers } = req.body; // An array of marker updates: [{ markerId, x, y, type, name, description }, ...]
+      const { markers } = req.body;
 
       const event = await Event.findOne({ _id: id, organizerId: req.user.userId });
       if (!event) {
