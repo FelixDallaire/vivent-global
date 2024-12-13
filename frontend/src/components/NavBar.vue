@@ -1,56 +1,49 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-light shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
+      <!-- Logo aligned to the left -->
       <router-link class="navbar-brand d-flex align-items-center" to="/">
         <img src="@/assets/logo.svg" alt="Logo" class="me-2" height="25" />
       </router-link>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <!-- Additional navigation links if needed -->
+
+      <!-- Centered Dashboard Link for Authenticated Users Only -->
+      <router-link v-if="isAuthenticated" to="/dashboard" class="nav-link mx-auto">Dashboard</router-link>
+
+      <!-- Navbar content -->
+      <div class="navbar-collapse">
+        <!-- Navigation items aligned to the right -->
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
+          <!-- Conditionally display user or auth links -->
+          <template v-if="isAuthenticated">
+            <span class="fw-medium text-capitalize">{{ username }}</span>
+            <!-- Avatar as a dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img :src="avatar" alt="Avatar" class="sp-1 rounded-circle border border-success border-3" height="40">
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item disabled" href="#">Profile</a>
+                </li>
+                <li v-if="isOrganizer">
+                  <router-link class="dropdown-item" to="/add-event">Add event</router-link>
+                </li>
+                <li>
+                  <button @click="logout" class="dropdown-item text-danger">Logout</button>
+                </li>
+              </ul>
+            </li>
+          </template>
+          <template v-else>
+            <!-- Login and Register Links for Unauthenticated Users -->
+            <li class="nav-item">
+              <router-link to="/login" class="nav-link">Login</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/register" class="nav-link">Register</router-link>
+            </li>
+          </template>
         </ul>
-      </div>
-      <div class="d-flex align-items-center">
-        <template v-if="isAuthenticated">
-          <span class="me-2 nav-username fw-medium">{{ username }}</span>
-          <div class="dropdown">
-            <button class="btn btn-link p-0 border-0 dropdown-toggle-no-arrow" type="button" id="avatarDropdown"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="avatar" alt="User Avatar"
-                class="rounded-circle p-0 border border-success border-3 avatar img-thumbnail nav-avatar" width="50"
-                height="50" />
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" aria-labelledby="avatarDropdown">
-              <li v-if="isOrganizer">
-                <router-link class="dropdown-item" to="/add-event">
-                  <i class="bi bi-plus-circle"></i> Add event
-                </router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item disabled" to="#">
-                  <i class="bi bi-person-circle"></i> Profile
-                  <span class="badge bg-warning text-dark">Soon!</span>
-                </router-link>
-              </li>
-              <li>
-                <button @click="logout" class="dropdown-item text-danger">
-                  <i class="bi bi-box-arrow-right"></i> Log out
-                </button>
-              </li>
-            </ul>
-          </div>
-        </template>
-        <template v-else>
-          <router-link class="btn btn-primary me-2" to="/login">
-            <i class="bi bi-box-arrow-in-right"></i> Log in
-          </router-link>
-          <router-link class="btn btn-outline-primary" to="/register">
-            <i class="bi bi-person-plus"></i> Register
-          </router-link>
-        </template>
       </div>
     </div>
   </nav>
@@ -91,11 +84,7 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  padding: 1rem;
-}
-
-.dropdown-toggle-no-arrow::after {
-  display: none !important;
+.nav-link.dropdown-toggle::after {
+  display: none;
 }
 </style>

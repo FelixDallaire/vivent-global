@@ -1,12 +1,12 @@
 // src/store/auth.js
 import { defineStore } from "pinia";
 import { loginUser, registerUser, logoutUser } from "../services/authService";
-import { useUserStore } from "./user"; // Import the User Store
-import { useEventStore } from "./event"; // Import the Event Store
+import { useUserStore } from "./user";
+import { useEventStore } from "./event";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    token: localStorage.getItem("token") || null, // Token JWT de l'utilisateur
+    token: localStorage.getItem("token") || null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -19,19 +19,13 @@ export const useAuthStore = defineStore("auth", {
         localStorage.setItem("token", this.token);
         const userStore = useUserStore();
         userStore.setUser(data.user);
-      } catch (error) {
-        throw error;
-      }
-    },
 
-    async register(username, password) {
-      try {
-        const data = await registerUser(username, password);
-        this.token = data.token;
-        localStorage.setItem("token", this.token);
-        const userStore = useUserStore();
-        userStore.setUser(data.user);
+        // After login, fetch events if user is authenticated
+        const eventStore = useEventStore();
+        await eventStore.fetchEvents();  // Make sure events are fetched after login
+
       } catch (error) {
+        console.error("Login failed:", error);
         throw error;
       }
     },
@@ -39,19 +33,14 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       try {
         await logoutUser();
-      } catch (error) {
-        console.error("Erreur lors de la déconnexion:", error);
-      } finally {
         this.token = null;
         localStorage.removeItem("token");
-
-        // Réinitialiser le User Store
         const userStore = useUserStore();
         userStore.resetUser();
-
-        // Also reset the Event Store
         const eventStore = useEventStore();
-        eventStore.resetEvents(); // Method to be added in Event Store for resetting events
+        eventStore.resetEvents();
+      } catch (error) {
+        console.error("Error during logout:", error);
       }
     },
   },

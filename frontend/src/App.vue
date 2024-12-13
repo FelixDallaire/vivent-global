@@ -1,25 +1,24 @@
 <template>
   <div>
-    <Navbar v-if="!hideNavbar" /> <!-- Conditionally render the navbar -->
-    <router-view />
+    <NavBar v-if="showNavBar" />
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import Navbar from '@/components/Navbar.vue';
+import NavBar from './components/NavBar.vue';
 
-export default {
-  components: {
-    Navbar,
-  },
-  setup() {
-    const route = useRoute();
-    const hideNavbar = computed(() => route.name === 'MapEditing');
-    return {
-      hideNavbar,
-    };
-  },
-};
+const route = useRoute();
+const showNavBar = computed(() => {
+  const hiddenNavRoutes = ['MapEditing'];
+  return !hiddenNavRoutes.includes(route.name);
+});
 </script>
+
+<style lang="scss">
+@use './assets/styles/main';
+</style>
