@@ -32,7 +32,6 @@ export default {
 <style scoped>
 .landing-page {
   height: calc(100vh - var(--navbar-height));
-  width: 100%;
 }
 
 .color-vivent-pink {

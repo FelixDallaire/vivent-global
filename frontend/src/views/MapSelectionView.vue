@@ -85,7 +85,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - var(--navbar-height));
+  min-height: calc(100vh - var(--navbar-height));
   width: 100%;
   padding: 2rem;
   background-color: #341C3E;

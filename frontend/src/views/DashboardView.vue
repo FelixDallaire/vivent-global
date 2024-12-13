@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="m-auto p-3 text-center w-50 text-light">
     <h1>Welcome, {{ username }}!</h1>
     <p v-if="isOrganizer">You have the ability to manage and create Events.</p>
     <p v-else>You can explore events and engage with them.</p>
@@ -38,14 +38,8 @@ export default {
 </script>
 
 <style scoped>
-.dashboard-container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
-}
-
-h1 {
-  color: #333;
+.landing-page {
+  height: calc(100vh - var(--navbar-height));
+  width: 100%;
 }
 </style>

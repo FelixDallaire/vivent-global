@@ -3,7 +3,6 @@ import LandingPageView from '@/views/LandingPageView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import DashboardView from '@/views/DashboardView.vue';
-import EventDetailView from '@/views/EventDetailView.vue';
 import AddEventView from '@/views/AddEventView.vue';
 import MapSelectionView from '@/views/MapSelectionView.vue';
 import MapEditingView from '@/views/MapEditingView.vue';
@@ -31,12 +30,6 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: DashboardView,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/events/:id',
-    name: 'EventDetail',
-    component: EventDetailView,
     meta: { requiresAuth: true },
   },
   {
