@@ -1,14 +1,13 @@
 // src/config/markerPlaceholders.js
 export const markerPlaceholders = {
   "map1.svg": [
-    { id: "marker1", x: 27.86, y: 37.04, name: "Placeholder 1" }, // Percentages
-    { id: "marker2", x: 42.96, y: 35.65, name: "Placeholder 2" },
-    { id: "marker3", x: 40.88, y: 16.20, name: "Placeholder 3" },
-    { id: "marker4", x: 53.64, y: 26.85, name: "Placeholder 4" },
-    { id: "marker5", x: 68.23, y: 42.13, name: "Placeholder 5" },
-    { id: "marker6", x: 71.61, y: 69.44, name: "Placeholder 6" },
-    { id: "marker7", x: 48.96, y: 67.59, name: "Placeholder 7" },
-    { id: "marker8", x: 31.25, y: 62.96, name: "Placeholder 8" },
+    { id: "marker1", x: 52, y: 90, name: "Placeholder 1" }, // Percentages
+    { id: "marker2", x: 45, y: 60, name: "Placeholder 2" },
+    { id: "marker3", x: 35, y: 45, name: "Placeholder 3" },
+    { id: "marker4", x: 54, y: 38, name: "Placeholder 4" },
+    { id: "marker5", x: 73, y: 40, name: "Placeholder 5" },
+    { id: "marker6", x: 76, y: 62, name: "Placeholder 6" },
+    { id: "marker7", x: 90, y: 87, name: "Placeholder 7" },
   ],
 
   "map2.svg": [
