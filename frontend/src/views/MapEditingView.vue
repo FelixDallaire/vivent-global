@@ -10,33 +10,56 @@
       :selectedMarker="selectedMarker"
       :mapType="mapType"
     />
-    <MarkerSettingsModal
-      v-if="showModal"
-      :selectedMarker="selectedMarker"
-      @close="closeMarkerSettings"
-    />
 
-    <MarkerSettingsModal
-  :selectedMarker="selectedMarker"
-  v-if="selectedMarker"
-  @close="closeMarkerSettings"
-/>
-
+    <!-- Bootstrap Modal -->
+    <div
+      class="modal fade"
+      id="markerSettingsModal"
+      tabindex="-1"
+      aria-labelledby="markerSettingsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="markerSettingsModalLabel">Marker Settings</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Selected Marker ID: {{ selectedMarker?.id || "None" }}</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="closeMarkerSettings"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import MapCanvas from "../components/MapEditor/MapCanvas.vue";
-import MarkerSettingsModal from "../components/MapEditor/MarkerSettingsModal.vue";
 import { useMarkerStore } from "@/stores/marker";
 import { markerPlaceholders } from "@/configs/markerPlaceholders";
 import { useEventStore } from "@/stores/event";
+import { Modal } from "bootstrap"; // Import Bootstrap Modal
 
 export default {
   name: "MapEditingView",
   components: {
     MapCanvas,
-    MarkerSettingsModal,
   },
   props: {
     eventId: {
@@ -47,7 +70,6 @@ export default {
   data() {
     return {
       selectedMarker: null,
-      showModal: false, // Control modal visibility
       combinedMarkers: [],
       eventDetails: null,
       mapType: null,
@@ -88,10 +110,12 @@ export default {
     },
     openMarkerSettings(marker) {
       this.selectedMarker = marker;
-      this.showModal = true;
+      // Ensure the modal is initialized and displayed
+      const modalElement = document.getElementById("markerSettingsModal");
+      const modal = new Modal(modalElement);
+      modal.show();
     },
     closeMarkerSettings() {
-      this.showModal = false;
       this.selectedMarker = null;
     },
   },
@@ -111,7 +135,6 @@ export default {
 </script>
 
 
-
 <style scoped>
 .app-container {
   display: flex;
@@ -119,6 +142,7 @@ export default {
   align-items: start;
   padding: 20px;
 }
+
 .loading {
   font-size: 1.2em;
   color: #555;

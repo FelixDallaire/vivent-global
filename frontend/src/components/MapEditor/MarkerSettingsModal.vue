@@ -1,13 +1,25 @@
 <template>
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <h2>Marker Settings</h2>
-      <p>Selected Marker ID: {{ selectedMarker.id }}</p>
-      <button @click="$emit('close')">Close</button>
+  <div class="modal fade" id="markerSettingsModal" tabindex="-1" role="dialog"
+    aria-labelledby="markerSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="markerSettingsModalLabel">Marker Settings</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" @click="$emit('close')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Selected Marker ID: {{ selectedMarker?.id || "No marker selected" }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="$emit('close')">
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-
-  
 </template>
 
 <script>
@@ -16,30 +28,13 @@ export default {
   props: {
     selectedMarker: {
       type: Object,
-      required: true,
+      required: false,
+      default: null,
     },
   },
 };
 </script>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-}
+/* Add any custom styles for the modal if needed */
 </style>
