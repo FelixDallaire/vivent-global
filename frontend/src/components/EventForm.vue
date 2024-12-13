@@ -1,33 +1,40 @@
 <template>
-  <form @submit.prevent="handleSubmit">
-    <div class="form-group">
-      <label for="eventName">Event Name:</label>
-      <input id="eventName" v-model="form.name" type="text" required placeholder="Enter event name"
-        class="form-control">
+  <form @submit.prevent="handleSubmit" class="needs-validation text-start" novalidate>
+    <!-- Event Name -->
+    <div class="mb-3">
+      <label for="eventName" class="form-label text-uppercase">Nom de l'événement</label>
+      <input type="text" id="eventName" v-model="form.name" required placeholder="Entrez le nom de l'événement"
+        class="form-control border border-black border-2" />
+      <div class="invalid-feedback">Veuillez entrer le nom de l'événement.</div>
     </div>
-    <div class="form-group">
-      <label for="eventDescription">Description:</label>
-      <textarea id="eventDescription" v-model="form.description" placeholder="Describe the event"
-        class="form-control"></textarea>
+
+    <!-- Event Description -->
+    <div class="mb-3">
+      <label for="eventDescription" class="form-label text-uppercase">Description</label>
+      <textarea id="eventDescription" v-model="form.description" placeholder="Décrivez l'événement"
+        class="form-control border border-black border-2"></textarea>
+      <div class="invalid-feedback">Veuillez décrire l'événement.</div>
     </div>
-    <div class="form-group">
-      <label for="eventStartDate">Start Date:</label>
-      <input id="eventStartDate" type="date" v-model="form.startDate" class="form-control" :min="today">
+
+    <!-- Start Date and End Date -->
+    <div class="mb-5">
+      <div class="d-flex align-items-center gap-2">
+        <label for="eventStartDate" class="form-label text-uppercase m-0">De:</label>
+        <input type="date" id="eventStartDate" v-model="form.startDate"
+          class="form-control border border-black border-2" :min="today" required />
+        <label for="eventEndDate" class="form-label text-uppercase m-0">À:</label>
+        <input type="date" id="eventEndDate" v-model="form.endDate"
+          class="form-control border border-black border-2" :min="form.startDate || today" required />
+      </div>
+      <div class="invalid-feedback">Veuillez choisir des dates valides.</div>
     </div>
-    <div class="form-group">
-      <label for="eventEndDate">End Date:</label>
-      <input id="eventEndDate" type="date" v-model="form.endDate" class="form-control" :min="form.startDate || today">
+
+    <!-- Submit Button -->
+    <div class="text-center mb-4">
+      <button type="submit" class="btn btn-outline-dark text-uppercase border-2">
+        {{ form._id ? "Mettre à jour l'événement" : "Créer l'événement" }}
+      </button>
     </div>
-    <div class="form-group">
-      <label for="mapType">Map Type:</label>
-      <select id="mapType" v-model="form.mapType" class="form-control" required>
-        <option disabled value="">Select a map type</option>
-        <option value="type1">Type 1</option>
-        <option value="type2">Type 2</option>
-        <option value="type3">Type 3</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">{{ form._id ? 'Update Event' : 'Create Event' }}</button>
   </form>
 </template>
 
@@ -38,28 +45,31 @@ export default {
       type: Object,
       default: () => ({
         _id: null,
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         startDate: new Date().toISOString().substr(0, 10),
         endDate: new Date().toISOString().substr(0, 10),
-        mapType: ''
-      })
-    }
+      }),
+    },
   },
   data() {
     return {
       form: { ...this.initialData },
-      today: new Date().toISOString().substr(0, 10)
+      today: new Date().toISOString().substr(0, 10),
     };
   },
   methods: {
     handleSubmit() {
-      if (!this.form.name || !this.form.mapType) {
-        alert('Please fill out all required fields.');
+      if (!this.form.name) {
+        alert("Veuillez remplir tous les champs requis.");
         return;
       }
-      this.$emit('form-submit', this.form);
-    }
-  }
+      this.$emit("form-submit", this.form);
+    },
+  },
 };
 </script>
+
+<style scoped>
+/* Add any additional styles if necessary */
+</style>

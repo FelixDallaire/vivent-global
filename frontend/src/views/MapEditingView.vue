@@ -28,14 +28,8 @@
     </div>
 
     <!-- Bootstrap Modal -->
-    <div
-      class="modal fade"
-      id="markerModal"
-      tabindex="-1"
-      aria-labelledby="markerModalLabel"
-      aria-hidden="true"
-      ref="markerModal"
-    >
+    <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true"
+      ref="markerModal">
       <div class="modal-dialog">
         <div class="modal-content" v-if="selectedMarker">
           <div class="modal-header">
@@ -46,37 +40,23 @@
             <!-- Marker Name -->
             <div class="mb-3">
               <label for="markerName" class="form-label">Marker Name</label>
-              <input
-                type="text"
-                id="markerName"
-                v-model="selectedMarker.name"
-                class="form-control"
-              />
+              <input type="text" id="markerName" v-model="selectedMarker.name" class="form-control" />
             </div>
 
             <!-- Marker Description -->
             <div class="mb-3">
               <label for="markerDescription" class="form-label">Marker Description</label>
-              <textarea
-                id="markerDescription"
-                v-model="selectedMarker.description"
-                class="form-control"
-              ></textarea>
+              <textarea id="markerDescription" v-model="selectedMarker.description" class="form-control"></textarea>
             </div>
 
             <!-- Marker Type -->
             <div>
               <label class="form-label">Marker Type</label>
               <div class="d-flex flex-wrap gap-2">
-                <img
-                  v-for="type in markerTypes"
-                  :key="type"
-                  :src="'https://felixdallaire.github.io/svg-hosting/markers/' + type"
-                  :alt="type"
-                  class="marker-type-option"
-                  :class="{ selected: selectedMarker.type === type }"
-                  @click="selectMarkerType(type)"
-                />
+                <img v-for="type in markerTypes" :key="type"
+                  :src="'https://felixdallaire.github.io/svg-hosting/markers/' + type" :alt="type"
+                  class="marker-type-option" :class="{ selected: selectedMarker.type === type }"
+                  @click="selectMarkerType(type)" />
               </div>
             </div>
           </div>
@@ -141,16 +121,22 @@ export default {
       const eventStore = useEventStore();
       try {
         const event = await eventStore.fetchEventById(this.eventId);
-        if (event && event.mapType) {
-          this.mapType = event.mapType;
-          console.log("[fetchEvent] Fetched map type:", this.mapType);
+
+        if (event) {
+          if (event.mapType) {
+            this.mapType = event.mapType;
+            console.log("[fetchEvent] Fetched map type:", this.mapType);
+          } else {
+            console.warn("[fetchEvent] No map type found. Redirecting to MapSelection...");
+            this.$router.push({ name: 'MapSelection', params: { eventId: this.eventId } });
+          }
         } else {
-          console.warn("[fetchEvent] No map type found, using default.");
-          this.mapType = "default_map.svg"; // Default map
+          console.error("[fetchEvent] Event not found.");
+          alert("Event not found.");
         }
       } catch (error) {
         console.error("[fetchEvent] Error fetching event:", error);
-        this.mapType = "default_map.svg"; // Fallback to default map
+        alert("An error occurred while fetching the event.");
       }
     },
     async fetchMarkers() {
@@ -265,15 +251,18 @@ export default {
 <style scoped>
 body {
   margin: 0;
-  overflow: hidden; /* Prevent overflow for full-height views */
+  overflow: hidden;
+  /* Prevent overflow for full-height views */
 }
 
 .map-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw; /* Full viewport width */
-  height: calc(100vh - var(--navbar-height)); /* Adjust height to exclude navbar */
+  width: 100vw;
+  /* Full viewport width */
+  height: calc(100vh - var(--navbar-height));
+  /* Adjust height to exclude navbar */
   overflow: hidden;
 
   background-image: url(https://felixdallaire.github.io/svg-hosting/city_background.png);
@@ -283,8 +272,10 @@ body {
 }
 
 .map-content {
-  height: 90%; /* Occupy 90% of the container height */
-  aspect-ratio: 360 / 280; /* Maintain the aspect ratio */
+  height: 90%;
+  /* Occupy 90% of the container height */
+  aspect-ratio: 360 / 280;
+  /* Maintain the aspect ratio */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -293,9 +284,12 @@ body {
 }
 
 .map-image {
-  height: 100%; /* Fill the height of .map-content */
-  width: auto; /* Maintain aspect ratio */
-  object-fit: contain; /* Ensure proper scaling */
+  height: 100%;
+  /* Fill the height of .map-content */
+  width: auto;
+  /* Maintain aspect ratio */
+  object-fit: contain;
+  /* Ensure proper scaling */
   display: block;
 }
 
@@ -303,8 +297,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw; /* Full viewport width */
-  height: 100%; /* Match container height */
+  width: 100vw;
+  /* Full viewport width */
+  height: 100%;
+  /* Match container height */
   background-color: #f8f9fa;
   z-index: 10;
 }
@@ -326,5 +322,4 @@ body {
 .marker-type-option.selected {
   border-color: blue;
 }
-
 </style>

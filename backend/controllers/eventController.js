@@ -34,8 +34,8 @@ module.exports = {
   createEvent: async (req, res) => {
     try {
       const { name, description, startDate, endDate, mapType } = req.body;
-      if (!name || !mapType) {
-        return res.status(400).json({ message: 'Name and mapType are required' });
+      if (!name || (!startDate && !endDate)) {
+        return res.status(400).json({ message: 'Name and dates are required' });
       }
 
       const newEvent = new Event({
@@ -44,7 +44,7 @@ module.exports = {
         description: description || '',
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
-        mapType
+        mapType: mapType ? mapType : null
       });
 
       await newEvent.save();

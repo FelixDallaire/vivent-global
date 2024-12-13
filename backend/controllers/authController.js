@@ -58,7 +58,6 @@ authController.register = async (req, res) => {
       avatar: avatarUrl,
     });
 
-    console.warn(newUser);
     await newUser.save();
 
     const token = generateToken(newUser);

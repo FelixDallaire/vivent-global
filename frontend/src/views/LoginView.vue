@@ -26,7 +26,6 @@ export default {
 }
 
 .login-wrapper {
-  max-width: 400px;
   background-color: #F9F4F1;
 }
 

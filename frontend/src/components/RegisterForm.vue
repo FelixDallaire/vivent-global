@@ -79,8 +79,6 @@ export default {
           error.value = "Veuillez sélectionner un rôle.";
           return;
         }
-
-        console.log(role.value)
         await authStore.register(username.value, password.value, role.value);
         router.push("/dashboard");
       } catch (err) {

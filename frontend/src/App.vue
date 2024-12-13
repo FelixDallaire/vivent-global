@@ -32,16 +32,22 @@ watch(
 );
 
 const containerClass = computed(() => {
-  const fullHeightRoutes = ['Login', 'Register', 'MapEditing'];
+  const fullHeightRoutes = ['Login', 'Register', 'AddEvent', 'MapSelection'];
   const noCenterAlignRoutes = ['MapEditing'];
-  
+  const editMapRoute = 'MapEditing';
+
+  if (route.name === editMapRoute) {
+    return 'container m-0 p-0'; // Specific class for EditMap
+  }
+
   if (fullHeightRoutes.includes(route.name)) {
     const baseClass = 'h-100 d-flex justify-content-center overflow-hidden';
     return noCenterAlignRoutes.includes(route.name) ? baseClass : `${baseClass} align-items-center`;
   }
-  
+
   return 'container';
 });
+
 
 </script>
 

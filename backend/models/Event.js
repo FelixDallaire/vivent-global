@@ -6,7 +6,7 @@ const eventSchema = new mongoose.Schema({
   description: String,
   startDate: Date,
   endDate: Date,
-  mapType: { type: String, required: true }
+  mapType: { type: String }
 });
 
 module.exports = mongoose.model('Event', eventSchema);
