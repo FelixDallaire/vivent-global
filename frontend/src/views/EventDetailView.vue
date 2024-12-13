@@ -1,5 +1,5 @@
 <template>
-    <p>Event Detail View</p>
+    <p>Event detail View</p>
 </template>
 
 <script></script>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-0 m-0 w-100">
     <NavBar v-if="showNavBar" />
     <div class="container">
       <router-view />

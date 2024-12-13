@@ -5,17 +5,34 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="markerSettingsModalLabel">Marker Settings</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" @click="$emit('close')">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            @click="$emit('close')"></button>
         </div>
         <div class="modal-body">
-          <p>Selected Marker ID: {{ selectedMarker?.id || "No marker selected" }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="$emit('close')">
-            Close
-          </button>
+          <form @submit.prevent="saveChanges">
+            <div class="mb-3">
+              <label for="markerName" class="form-label">Marker Name</label>
+              <input type="text" id="markerName" class="form-control" v-model="editableMarker.name" />
+            </div>
+            <div class="mb-3">
+              <label for="markerDescription" class="form-label">Marker Description</label>
+              <textarea id="markerDescription" class="form-control" v-model="editableMarker.description"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="markerType" class="form-label">Marker Type</label>
+              <select id="markerType" class="form-select" v-model="editableMarker.type">
+                <option v-for="icon in availableIcons" :key="icon" :value="icon">
+                  {{ icon }}
+                </option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="$emit('close')">
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -30,6 +47,33 @@ export default {
       type: Object,
       required: false,
       default: null,
+    },
+  },
+  data() {
+    return {
+      editableMarker: { ...this.selectedMarker }, // Clone selected marker for editing
+      availableIcons: [
+        "big_stage.svg",
+        "default.svg",
+        "tent_big.svg",
+        "tent_medium.svg",
+        "tent_medium_long.svg",
+        "tent_small.svg",
+      ],
+    };
+  },
+  watch: {
+    selectedMarker: {
+      immediate: true,
+      handler(newMarker) {
+        this.editableMarker = { ...newMarker }; // Update editableMarker when selectedMarker changes
+      },
+    },
+  },
+  methods: {
+    saveChanges() {
+      this.$emit("update-marker", this.editableMarker); // Emit updated marker to parent
+      this.$emit("close"); // Close modal
     },
   },
 };

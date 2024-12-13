@@ -1,6 +1,5 @@
 <template>
   <div class="marker-layer">
-    <!-- Display each marker -->
     <div
       v-for="marker in markers"
       :key="marker.id"
@@ -27,7 +26,6 @@ export default {
     },
   },
   methods: {
-    // Style for positioning markers
     markerStyle(marker) {
       return {
         position: "absolute",
@@ -37,15 +35,12 @@ export default {
         cursor: "pointer",
       };
     },
-    // Generate the URL for the marker's icon
     getMarkerIconUrl(markerType) {
-      const defaultIcon = "default.svg"; // Fallback for invalid or missing types
+      const defaultIcon = "default.svg";
       return `https://felixdallaire.github.io/svg-hosting/markers/${markerType || defaultIcon}`;
     },
-    // Handle marker click event
     handleClick(marker) {
-      console.log("Marker clicked:", marker);
-      this.$emit("select-marker", marker); // Emit the marker as selected
+      this.$emit("select-marker", marker);
     },
   },
 };
@@ -60,13 +55,11 @@ export default {
   height: 100%;
   pointer-events: none;
 }
-
 .marker {
   position: absolute;
   transform: translate(-50%, -50%);
   pointer-events: all;
 }
-
 .marker-icon {
   width: 25px;
   height: 25px;

@@ -1,0 +1,40 @@
+// Variables
+$base-dark-color: #1d1a18;
+$vivent-font-light-path: '@/assets/fonts/vivent_font_light.woff2';
+$vivent-font-bold-path: '@/assets/fonts/vivent_font_bold.woff2';
+$font-light: 'ViventLight';
+$font-bold: 'ViventBold';
+
+// @font-face Definitions
+@font-face {
+  font-family: 'ViventLight';
+  src: url($vivent-font-light-path) format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ViventBold';
+  src: url($vivent-font-bold-path) format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+// Styles
+.navbar {
+  background-color: $base-dark-color !important;
+  font-family: $font-bold;
+}
+
+h1, h2, h3 {
+  font-family: $font-bold;
+}
+
+body {
+  font-family: $font-light;
+  color: $base-dark-color;
+}
+
+p {
+  font-family: $font-light;
+}
