@@ -1,14 +1,14 @@
 // src/config/markerPlaceholders.js
 export const markerPlaceholders = {
   "map1.svg": [
-    { id: "marker1", x: (535 / 1920) * 360, y: (400 / 1080) * 280, name: "Placeholder 1" },
-    { id: "marker2", x: (825 / 1920) * 360, y: (385 / 1080) * 280, name: "Placeholder 2" },
-    { id: "marker3", x: (785 / 1920) * 360, y: (175 / 1080) * 280, name: "Placeholder 3" },
-    { id: "marker4", x: (1030 / 1920) * 360, y: (290 / 1080) * 280, name: "Placeholder 4" },
-    { id: "marker5", x: (1310 / 1920) * 360, y: (455 / 1080) * 280, name: "Placeholder 5" },
-    { id: "marker6", x: (1375 / 1920) * 360, y: (750 / 1080) * 280, name: "Placeholder 6" },
-    { id: "marker7", x: (940 / 1920) * 360, y: (730 / 1080) * 280, name: "Placeholder 7" },
-    { id: "marker8", x: (600 / 1920) * 360, y: (680 / 1080) * 280, name: "Placeholder 8" },
+    { id: "marker1", x: 27.86, y: 37.04, name: "Placeholder 1" }, // Percentages
+    { id: "marker2", x: 42.96, y: 35.65, name: "Placeholder 2" },
+    { id: "marker3", x: 40.88, y: 16.20, name: "Placeholder 3" },
+    { id: "marker4", x: 53.64, y: 26.85, name: "Placeholder 4" },
+    { id: "marker5", x: 68.23, y: 42.13, name: "Placeholder 5" },
+    { id: "marker6", x: 71.61, y: 69.44, name: "Placeholder 6" },
+    { id: "marker7", x: 48.96, y: 67.59, name: "Placeholder 7" },
+    { id: "marker8", x: 31.25, y: 62.96, name: "Placeholder 8" },
   ],
 
   "map2.svg": [

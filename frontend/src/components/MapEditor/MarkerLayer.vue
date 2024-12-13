@@ -1,8 +1,13 @@
 <template>
   <div class="marker-layer">
     <!-- Display each marker -->
-    <div v-for="marker in markers" :key="marker.id" class="marker" :style="markerStyle(marker)"
-      @click="handleClick(marker)">
+    <div
+      v-for="marker in markers"
+      :key="marker.id"
+      class="marker"
+      :style="markerStyle(marker)"
+      @click="handleClick(marker)"
+    >
       <img :src="getMarkerIconUrl(marker.type)" :alt="marker.type" class="marker-icon" />
     </div>
   </div>
@@ -40,7 +45,7 @@ export default {
     // Handle marker click event
     handleClick(marker) {
       console.log("Marker clicked:", marker);
-      this.$emit("select-marker", marker);
+      this.$emit("select-marker", marker); // Emit the marker as selected
     },
   },
 };
