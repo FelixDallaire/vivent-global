@@ -1,5 +1,6 @@
 // Variables
 $base-dark-color: #1d1a18;
+$vivent-purple: #4A2263;
 $vivent-font-light-path: '@/assets/fonts/vivent_font_light.woff2';
 $vivent-font-bold-path: '@/assets/fonts/vivent_font_bold.woff2';
 $font-light: 'ViventLight';
@@ -20,13 +21,18 @@ $font-bold: 'ViventBold';
   font-style: normal;
 }
 
+:root {
+  --navbar-height: 60px; /* Adjust this value based on your NavBar height */
+}
+
 // Styles
 .navbar {
   background-color: $base-dark-color !important;
   font-family: $font-bold;
+  height: var(--navbar-height);
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5, label {
   font-family: $font-bold;
 }
 
@@ -37,4 +43,12 @@ body {
 
 p {
   font-family: $font-light;
+}
+
+.btn-outline-dark {
+  font-family: $font-bold !important;
+}
+
+.vivent-text-purple {
+  color: $vivent-purple;
 }

@@ -37,10 +37,10 @@
           <template v-else>
             <!-- Login and Register Links for Unauthenticated Users -->
             <li class="nav-item">
-              <router-link to="/login" class="nav-link">Login</router-link>
+              <router-link to="/login" class="nav-link text-uppercase text-white">Login</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/register" class="nav-link">Register</router-link>
+              <router-link to="/register" class="nav-link text-uppercase text-white">Register</router-link>
             </li>
           </template>
         </ul>

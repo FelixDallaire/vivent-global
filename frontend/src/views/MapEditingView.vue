@@ -18,7 +18,7 @@
         <!-- Markers -->
         <g v-for="marker in markers" :key="marker.id || marker.placeholderId">
           <!-- Circle Background -->
-          <circle :cx="marker.x * 3.6" :cy="marker.y * 2.8" r="10" fill="whitesmoke" />
+          <circle :cx="marker.x * 3.6" :cy="marker.y * 2.8" r="11" fill="whitesmoke" />
           <!-- Marker Icon -->
           <image :x="marker.x * 3.6 - 10" :y="marker.y * 2.8 - 10" width="20" height="20"
             :href="'https://felixdallaire.github.io/svg-hosting/markers/' + (marker.type || 'default.svg')"
@@ -264,17 +264,17 @@ export default {
 
 <style scoped>
 body {
-  background-color: #3E2383 !important;
+  margin: 0;
+  overflow: hidden; /* Prevent overflow for full-height views */
 }
 
 .map-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: auto;
-  width: 100vw;
-  height: 85vh;
-  padding: 3vh;
+  width: 100vw; /* Full viewport width */
+  height: calc(100vh - var(--navbar-height)); /* Adjust height to exclude navbar */
+  overflow: hidden;
 
   background-image: url(https://felixdallaire.github.io/svg-hosting/city_background.png);
   background-position: bottom;
@@ -283,8 +283,8 @@ body {
 }
 
 .map-content {
-  height: 95%;
-  aspect-ratio: 360 / 280;
+  height: 90%; /* Occupy 90% of the container height */
+  aspect-ratio: 360 / 280; /* Maintain the aspect ratio */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -293,9 +293,9 @@ body {
 }
 
 .map-image {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
+  height: 100%; /* Fill the height of .map-content */
+  width: auto; /* Maintain aspect ratio */
+  object-fit: contain; /* Ensure proper scaling */
   display: block;
 }
 
@@ -303,10 +303,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
+  width: 100vw; /* Full viewport width */
+  height: 100%; /* Match container height */
   background-color: #f8f9fa;
   z-index: 10;
+}
+
+.marker:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 .marker-type-option {
@@ -322,8 +327,4 @@ body {
   border-color: blue;
 }
 
-.marker:hover {
-  opacity: 0.75;
-  cursor: pointer;
-}
 </style>
