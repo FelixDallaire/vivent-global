@@ -22,7 +22,7 @@
 
     <button class="save-dashboard-button btn rounded shadow-sm z-3 px-4 py-2 fw-semibold text-light text-uppercase"
       @click="saveAndGoToDashboard">
-      Sauvegarder et aller au tableau de bord
+      Sauvegarder
     </button>
 
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true"

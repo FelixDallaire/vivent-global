@@ -47,9 +47,9 @@ export default {
     const router = useRouter();
     const eventStore = useEventStore();
     const maps = ref([
-      { id: 1, name: "Carte 1", fileName: "map1.svg" },
-      { id: 2, name: "Carte 2", fileName: "map2.svg" },
-      { id: 3, name: "Carte 3", fileName: "map3.svg" },
+      { id: 1, name: "Forêt", fileName: "map1.svg" },
+      { id: 2, name: "Plage", fileName: "map2.svg" },
+      { id: 3, name: "île", fileName: "map3.svg" },
     ]);
 
     const selectedMapImage = ref("");
