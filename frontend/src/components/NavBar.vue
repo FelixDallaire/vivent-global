@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <!-- Logo aligned to the left -->
-      <router-link class="navbar-brand d-flex align-items-center" to="/">
+      <router-link class="navbar-brand d-flex align-items-center" :to="isAuthenticated ? '/dashboard' : '/'">
         <img src="@/assets/logo.svg" alt="Logo" class="me-2" height="25" />
       </router-link>
 

@@ -27,6 +27,12 @@
       </svg>
     </div>
 
+    <!-- Save and Go to Dashboard Button -->
+    <button class="save-dashboard-button btn rounded shadow-sm z-3 px-4 py-2 fw-semibold text-light text-uppercase"
+      @click="saveAndGoToDashboard">
+      Save and Go to Dashboard
+    </button>
+
     <!-- Bootstrap Modal -->
     <div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true"
       ref="markerModal">
@@ -39,14 +45,16 @@
           <div class="modal-body">
             <!-- Marker Name -->
             <div class="mb-3">
-              <label for="markerName" class="form-label">Marker Name</label>
-              <input type="text" id="markerName" v-model="selectedMarker.name" class="form-control" />
+              <label for="markerName" class="form-label text-uppercase">Marker Name</label>
+              <input type="text" id="markerName" v-model="selectedMarker.name"
+                class="form-control border border-black border-2" />
             </div>
 
             <!-- Marker Description -->
             <div class="mb-3">
-              <label for="markerDescription" class="form-label">Marker Description</label>
-              <textarea id="markerDescription" v-model="selectedMarker.description" class="form-control"></textarea>
+              <label for="markerDescription" class="form-label text-uppercase">Marker Description</label>
+              <textarea id="markerDescription" v-model="selectedMarker.description"
+                class="form-control border border-black border-2"></textarea>
             </div>
 
             <!-- Marker Type -->
@@ -55,20 +63,24 @@
               <div class="d-flex flex-wrap gap-2">
                 <img v-for="type in markerTypes" :key="type"
                   :src="'https://felixdallaire.github.io/svg-hosting/markers/' + type" :alt="type"
-                  class="marker-type-option" :class="{ selected: selectedMarker.type === type }"
+                  class="marker-type-option rounded-circle p-1" :class="{ selected: selectedMarker.type === type }"
                   @click="selectMarkerType(type)" />
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
-            <button type="button" class="btn btn-primary" @click="saveMarker">Save Changes</button>
+            <button type="button" class="btn btn-outline-danger border-2 text-uppercase"
+              @click="closeModal">Close</button>
+            <button type="button" class="btn btn-outline-dark fw-bold border-2 text-uppercase"
+              @click="saveMarker">Save
+              Changes</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import { useMarkerStore } from "@/stores/marker";
@@ -90,12 +102,12 @@ export default {
       selectedMarker: null,
       isLoading: true, // Loader flag
       markerTypes: [
-        "big_stage.svg",
         "default.svg",
-        "tent_big.svg",
+        "tent_small.svg",
         "tent_medium.svg",
         "tent_medium_long.svg",
-        "tent_small.svg",
+        "tent_big.svg",
+        "big_stage.svg",
       ],
       modalInstance: null, // To store the modal instance
     };
@@ -244,11 +256,19 @@ export default {
         console.error("[saveMarker] Error saving marker:", error);
       }
     },
+    async saveAndGoToDashboard() {
+      try {
+        this.$router.push({ name: 'Dashboard' });
+      } catch (error) {
+        console.error("[saveAndGoToDashboard] Error redirecting to dashboard:", error);
+        alert("An error occurred while saving and redirecting.");
+      }
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 body {
   margin: 0;
   overflow: hidden;
@@ -311,8 +331,8 @@ body {
 }
 
 .marker-type-option {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
   border: 2px solid transparent;
   border-radius: 5px;
@@ -320,6 +340,32 @@ body {
 }
 
 .marker-type-option.selected {
-  border-color: blue;
+  border-color: #5c0083;
+}
+
+.save-dashboard-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #1d1a18;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: rgba(92, 0, 131, 1);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &:active {
+    background-color: rgba(161, 77, 216, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: none;
+  }
+}
+
+.modal-content {
+  background-color: #F9F4F1 !important;
 }
 </style>
