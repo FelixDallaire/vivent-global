@@ -1,43 +1,31 @@
 <template>
   <div class="map-container">
-    <!-- SVG Map -->
-    <svg
-      class="map-image"
-      viewBox="0 0 800 600"
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <!-- Map Background -->
-      <image
-        :href="'https://felixdallaire.github.io/svg-hosting/maps/' + mapType"
-        width="100%"
-        height="100%"
-      />
+    <!-- Loader -->
+    <div v-if="isLoading" class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
 
-      <!-- Markers -->
-      <g v-for="marker in markers" :key="marker.id || marker.placeholderId">
-        <!-- Circle Background -->
-        <circle
-          :cx="(marker.x / 100) * 800"
-          :cy="(marker.y / 100) * 600"
-          r="30"
-          fill="whitesmoke"
-        />
-        <!-- Marker Icon -->
-        <image
-          :x="(marker.x / 100) * 800 - 25"
-          :y="(marker.y / 100) * 600 - 25"
-          width="50"
-          height="50"
-          :href="'https://felixdallaire.github.io/svg-hosting/markers/' + (marker.type || 'default.svg')"
-          :alt="marker.name"
-          class="marker"
-          @click.stop="selectMarker(marker)"
-          data-bs-toggle="modal"
-          data-bs-target="#markerModal"
-        />
-      </g>
-    </svg>
+    <!-- Map and Markers -->
+    <div v-else class="map-content rounded-4 shadow">
+      <!-- SVG Map -->
+      <svg class="map-image rounded-4 shadow" :viewBox="'0 0 360 280'" preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg">
+        <!-- Map Background -->
+        <image :href="'https://felixdallaire.github.io/svg-hosting/maps/' + mapType" width="360" height="280" />
+
+        <!-- Markers -->
+        <g v-for="marker in markers" :key="marker.id || marker.placeholderId">
+          <!-- Circle Background -->
+          <circle :cx="marker.x * 3.6" :cy="marker.y * 2.8" r="10" fill="whitesmoke" />
+          <!-- Marker Icon -->
+          <image :x="marker.x * 3.6 - 10" :y="marker.y * 2.8 - 10" width="20" height="20"
+            :href="'https://felixdallaire.github.io/svg-hosting/markers/' + (marker.type || 'default.svg')"
+            :alt="marker.name" class="marker" @click.stop="selectMarker(marker)" />
+        </g>
+      </svg>
+    </div>
 
     <!-- Bootstrap Modal -->
     <div
@@ -46,6 +34,7 @@
       tabindex="-1"
       aria-labelledby="markerModalLabel"
       aria-hidden="true"
+      ref="markerModal"
     >
       <div class="modal-dialog">
         <div class="modal-content" v-if="selectedMarker">
@@ -92,7 +81,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
             <button type="button" class="btn btn-primary" @click="saveMarker">Save Changes</button>
           </div>
         </div>
@@ -103,6 +92,7 @@
 
 <script>
 import { useMarkerStore } from "@/stores/marker";
+import { useEventStore } from "@/stores/event";
 import { markerPlaceholders } from "@/configs/markerPlaceholders";
 
 export default {
@@ -115,9 +105,10 @@ export default {
   },
   data() {
     return {
-      mapType: "map1.svg",
+      mapType: null, // Dynamically fetched
       markers: [],
       selectedMarker: null,
+      isLoading: true, // Loader flag
       markerTypes: [
         "big_stage.svg",
         "default.svg",
@@ -126,17 +117,42 @@ export default {
         "tent_medium_long.svg",
         "tent_small.svg",
       ],
+      modalInstance: null, // To store the modal instance
     };
   },
   async mounted() {
     try {
-      console.log("[mounted] Fetching markers...");
-      await this.fetchMarkers();
+      console.log("[mounted] Fetching event and markers...");
+      await this.fetchEvent(); // Fetch the event to get the mapType
+      await this.fetchMarkers(); // Fetch markers once the mapType is loaded
+
+      // Initialize modal
+      const modalElement = this.$refs.markerModal;
+      this.modalInstance = new bootstrap.Modal(modalElement);
+
+      this.isLoading = false; // Set loader flag to false
     } catch (error) {
       console.error("[mounted] Error during initialization:", error);
+      this.isLoading = false; // Ensure loader hides on error
     }
   },
   methods: {
+    async fetchEvent() {
+      const eventStore = useEventStore();
+      try {
+        const event = await eventStore.fetchEventById(this.eventId);
+        if (event && event.mapType) {
+          this.mapType = event.mapType;
+          console.log("[fetchEvent] Fetched map type:", this.mapType);
+        } else {
+          console.warn("[fetchEvent] No map type found, using default.");
+          this.mapType = "default_map.svg"; // Default map
+        }
+      } catch (error) {
+        console.error("[fetchEvent] Error fetching event:", error);
+        this.mapType = "default_map.svg"; // Fallback to default map
+      }
+    },
     async fetchMarkers() {
       const markerStore = useMarkerStore();
       try {
@@ -171,6 +187,14 @@ export default {
       }
       console.log("[selectMarker] Selected marker:", marker);
       this.selectedMarker = { ...marker };
+
+      // Show modal programmatically
+      this.modalInstance.show();
+    },
+    closeModal() {
+      if (this.modalInstance) {
+        this.modalInstance.hide();
+      }
     },
     selectMarkerType(type) {
       if (!this.selectedMarker) {
@@ -181,85 +205,108 @@ export default {
       this.selectedMarker.type = type;
     },
     async saveMarker() {
-  try {
-    console.log("[saveMarker] Saving marker:", this.selectedMarker);
-    const markerStore = useMarkerStore();
+      try {
+        console.log("[saveMarker] Saving marker:", this.selectedMarker);
+        const markerStore = useMarkerStore();
 
-    if (this.selectedMarker.isPlaceholder) {
-      console.log("[saveMarker] Creating new marker...");
-      const newMarker = await markerStore.addMarker({
-        eventId: this.eventId,
-        x: this.selectedMarker.x,
-        y: this.selectedMarker.y,
-        type: this.selectedMarker.type,
-        name: this.selectedMarker.name,
-        description: this.selectedMarker.description,
-      });
+        if (this.selectedMarker.isPlaceholder) {
+          console.log("[saveMarker] Creating new marker...");
+          const newMarker = await markerStore.addMarker({
+            eventId: this.eventId,
+            x: this.selectedMarker.x,
+            y: this.selectedMarker.y,
+            type: this.selectedMarker.type,
+            name: this.selectedMarker.name,
+            description: this.selectedMarker.description,
+          });
 
-      if (!newMarker) {
-        console.error("[saveMarker] Failed to create new marker");
-        return;
+          if (!newMarker) {
+            console.error("[saveMarker] Failed to create new marker");
+            return;
+          }
+
+          console.log("[saveMarker] Created new marker:", newMarker);
+
+          const index = this.markers.findIndex(
+            (marker) => marker.placeholderId === this.selectedMarker.placeholderId
+          );
+          if (index !== -1) {
+            this.markers[index] = { ...newMarker, id: newMarker._id };
+          }
+        } else {
+          if (!this.selectedMarker.id) {
+            console.error("[saveMarker] Marker ID is undefined for update");
+            return;
+          }
+
+          console.log("[saveMarker] Updating existing marker...");
+          await markerStore.updateMarker(this.selectedMarker.id, {
+            name: this.selectedMarker.name,
+            description: this.selectedMarker.description,
+            type: this.selectedMarker.type,
+          });
+
+          const index = this.markers.findIndex((marker) => marker.id === this.selectedMarker.id);
+          if (index !== -1) {
+            this.markers[index] = { ...this.selectedMarker };
+          }
+        }
+
+        // Close modal after saving
+        this.closeModal();
+      } catch (error) {
+        console.error("[saveMarker] Error saving marker:", error);
       }
-
-      console.log("[saveMarker] Created new marker:", newMarker);
-
-      const index = this.markers.findIndex(
-        (marker) => marker.placeholderId === this.selectedMarker.placeholderId
-      );
-      if (index !== -1) {
-        this.markers[index] = { ...newMarker, id: newMarker._id };
-      }
-    } else {
-      if (!this.selectedMarker.id) {
-        console.error("[saveMarker] Marker ID is undefined for update");
-        return;
-      }
-
-      console.log("[saveMarker] Updating existing marker...");
-      await markerStore.updateMarker(this.selectedMarker.id, {
-        name: this.selectedMarker.name,
-        description: this.selectedMarker.description,
-        type: this.selectedMarker.type,
-      });
-
-      const index = this.markers.findIndex((marker) => marker.id === this.selectedMarker.id);
-      if (index !== -1) {
-        this.markers[index] = { ...this.selectedMarker };
-      }
-    }
-
-    // Close the modal programmatically
-    const modal = bootstrap.Modal.getInstance(document.getElementById("markerModal"));
-    if (modal) {
-      modal.hide();
-    }
-  } catch (error) {
-    console.error("[saveMarker] Error saving marker:", error);
-  }
-}
-,
+    },
   },
 };
 </script>
 
 <style scoped>
+body {
+  background-color: #3E2383 !important;
+}
+
 .map-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: 100vw;
+  height: 85vh;
+  padding: 3vh;
+
+  background-image: url(https://felixdallaire.github.io/svg-hosting/city_background.png);
+  background-position: bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.map-content {
+  height: 95%;
+  aspect-ratio: 360 / 280;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  background-color: red;
-}
-
-.map-image {
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-  max-width: 100%;
-  display: block;
-  object-fit: contain;
+  background-color: #f8f9fa;
+  z-index: 10;
 }
 
 .marker-type-option {

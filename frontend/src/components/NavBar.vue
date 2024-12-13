@@ -7,7 +7,7 @@
       </router-link>
 
       <!-- Centered Dashboard Link for Authenticated Users Only -->
-      <router-link v-if="isAuthenticated" to="/dashboard" class="nav-link mx-auto">Dashboard</router-link>
+      <router-link v-if="isAuthenticated" to="/dashboard" class="nav-link mx-auto text-uppercase text-white">Dashboard</router-link>
 
       <!-- Navbar content -->
       <div class="navbar-collapse">
@@ -15,7 +15,7 @@
         <ul class="navbar-nav ms-auto d-flex align-items-center">
           <!-- Conditionally display user or auth links -->
           <template v-if="isAuthenticated">
-            <span class="fw-medium text-capitalize">{{ username }}</span>
+            <span class="fw-medium text-uppercase text-white ">{{ username }}</span>
             <!-- Avatar as a dropdown -->
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

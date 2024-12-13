@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar v-if="showNavBar" />
+    <NavBar />
     <div class="container m-0 p-0">
       <router-view />
     </div>
@@ -8,15 +8,25 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import NavBar from './components/NavBar.vue';
 
 const route = useRoute();
-const showNavBar = computed(() => {
-  const hiddenNavRoutes = ['MapEditing'];
-  return !hiddenNavRoutes.includes(route.name);
-});
+const routeBackgroundColors = {
+  MapEditing: '#3E2383',
+  default: '#FFFFFF',
+};
+
+ watch(
+  () => route.name,
+  (newRouteName) => {
+    const newBackgroundColor =
+      routeBackgroundColors[newRouteName] || routeBackgroundColors.default;
+    document.body.style.backgroundColor = newBackgroundColor;
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss">
